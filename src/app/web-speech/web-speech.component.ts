@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MonkeycrapService} from '../monkeycrap.service'; 
 
 @Component({
   selector: 'app-web-speech',
@@ -6,10 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./web-speech.component.css']
 })
 export class WebSpeechComponent implements OnInit {
-
-  constructor() { }
+   
+  constructor(private speechservice : MonkeycrapService) { }
 
   ngOnInit(): void {
+    this.speechservice.initialize(); 
   }
 
+  start() : void {
+    this.speechservice.speechRecognitionStart(); 
+  }
+
+  stop() : void { 
+    this.speechservice.speechRecognitionStop(); 
+  }
 }

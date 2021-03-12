@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+/*import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSpeechComponent } from './web-speech.component';
 
@@ -10,4 +10,4 @@ import { WebSpeechComponent } from './web-speech.component';
     CommonModule
   ]
 })
-export class WebSpeechModule { }
+export class WebSpeechModule { } */
