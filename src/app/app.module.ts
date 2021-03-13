@@ -5,10 +5,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
+import { SpeechModule} from './speech/speech.module';
+import { TutorialsMenuComponent } from './tutorials-menu/tutorials-menu.component';
+import { QuestionComponent } from './question/question.component';
+import { TopNavigationComponent } from './top-navigation/top-navigation.component'; 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TutorialsMenuComponent,
+    QuestionComponent,
+    TopNavigationComponent
   ],
   imports: [
     BrowserModule,
