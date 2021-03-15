@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { LanguagesMenuComponent} from './languages-menu/languages-menu.component'; 
 import { TutorialsMenuComponent } from './tutorials-menu/tutorials-menu.component';
 import { TutorialComponent } from './tutorial/tutorial.component'; 
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/language-tutorials', pathMatch: 'full' },
-  { path: 'language-tutorials', component: TutorialsMenuComponent},
+  { path: '', redirectTo: '/languages-menu', pathMatch: 'full' },
+  { path: 'languages-menu', component: LanguagesMenuComponent},
+  { path: 'language-tutorials/:name', component: TutorialsMenuComponent},
   { path: 'tutorial/:id', component: TutorialComponent }, 
 
 ];

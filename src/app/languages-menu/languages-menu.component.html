@@ -1,1 +1,4 @@
 <p>languages-menu works!</p>
+<ul>
+    <li *ngFor = "let language of languages"><a routerLink = "/language-tutorials/{{language.name}}">{{language.name}}</a></li>
+</ul>

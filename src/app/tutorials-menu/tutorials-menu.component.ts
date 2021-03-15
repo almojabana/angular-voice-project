@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { TUTORIALS } from '../mock-tutorials';
 import { Tutorial } from '../tutorial';
 import { TutorialsMenuService } from '../tutorials-menu.service';
@@ -10,16 +12,21 @@ import { TutorialsMenuService } from '../tutorials-menu.service';
 })
 export class TutorialsMenuComponent implements OnInit {
   tutorials: Tutorial[] = [];
-  constructor(private tutorialsMenuService: TutorialsMenuService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private tutorialsMenuService: TutorialsMenuService,
+    private location: Location
+  ) { }
 
   ngOnInit(): void {
     this.getTutorials();
   }
 
   getTutorials(): void {
-    this.tutorialsMenuService.getTutorials().subscribe(tutorials => this.tutorials = tutorials)
+    const name = this.route.snapshot.paramMap.get('name');
+    this.tutorialsMenuService.getTutorials(name.toString()).subscribe(tutorials => { 
+      debugger
+      this.tutorials = tutorials
+     })
   }
-
-
-
 }

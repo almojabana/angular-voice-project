@@ -1,4 +1,5 @@
 export interface Tutorial {
     id: number; 
-    name: string; 
+    name: string;
+    language: string;  
 }

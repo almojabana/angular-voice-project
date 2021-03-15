@@ -6,4 +6,4 @@ export const LANGUAGES:Language[] =  [
     {id: 3, name: 'Java'},
     {id: 4, name: 'SQL'},
     {id: 5, name: 'TypeScript'},
-];
+]; 
