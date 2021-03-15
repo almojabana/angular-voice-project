@@ -24,9 +24,8 @@ export class TutorialsMenuComponent implements OnInit {
 
   getTutorials(): void {
     const name = this.route.snapshot.paramMap.get('name');
-    this.tutorialsMenuService.getTutorials(name.toString()).subscribe(tutorials => { 
-      debugger
+    this.tutorialsMenuService.getTutorials(name.toString()).subscribe(tutorials => {
       this.tutorials = tutorials
-     })
+    })
   }
 }

@@ -13,7 +13,6 @@ export class TutorialsMenuService {
   constructor() { }
   
   getTutorials(name:string): Observable<Tutorial[]> {
-    debugger
     const tutorials = of(TUTORIALS.filter(tutorial => tutorial.language === name));
     return tutorials;
   }
