@@ -19,7 +19,9 @@ export class SpeechComponent implements OnInit {
     this.speechRecognition.initialize();
     this.initRecognition();
 
-    this.transcript$.subscribe(evt => console.log(evt));
+    this.transcript$.subscribe(evt => {
+      console.log(evt)
+    });
     this.listening$.subscribe(evt => console.log(evt));
   }
   start(): void {
