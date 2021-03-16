@@ -39,7 +39,7 @@ export class SpeechComponent implements OnInit {
     // Also, for every "Final Result"(from the speech), the code will append that text to the existing Text Area component.
     this.transcript$ = this.speechRecognition.onResult().pipe(
       map((notification) => {
-        console.log(notification);
+        console.log(`notification 1${notification}`);
         this.textResult = notification;
         return notification;
         // if (notification.event === SpeechEvent.FinalContent) {
@@ -67,6 +67,8 @@ export class SpeechComponent implements OnInit {
         console.log(data, "ERROR");
         return data;
       })
+
+      
     );
   }
 }

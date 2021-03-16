@@ -1,3 +1,4 @@
+import { findLast } from '@angular/compiler/src/directive_resolver';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 declare var webkitSpeechRecognition: any;
@@ -55,12 +56,12 @@ export class SpeechRecognitionService {
     return new Observable(observer => {
 
       this.recognition.onend = () => {
-        this.ngZone.run(() => {
+      //  this.ngZone.run(() => {
           console.log("Speech recognition onend");
           observer.next("finish");
 
           this.isListening = false;
-        });
+      //  });
       };
     });
   }
@@ -78,13 +79,17 @@ export class SpeechRecognitionService {
           if (event.results[i].isFinal) {
             finalContent += event.results[i][0].transcript;
             this.ngZone.run(() => {
-              observer.next(finalContent);
+              observer.next(
+               finalContent);
             });
-          } else {
+            console.log(`final content:${finalContent}`);
+          } 
+          else {
             interimContent += event.results[i][0].transcript;
-            this.ngZone.run(() => {
+            this.ngZone.run(() => { 
               observer.next(interimContent);
             });
+            console.log(`interim content:${interimContent}`);
           }
         }
       };

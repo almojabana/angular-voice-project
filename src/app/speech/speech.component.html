@@ -1,2 +1,5 @@
 <div><button (click)="start()">start</button></div>
 <div><button (click)="stop()">stop</button></div>
+
+    <textarea id ="answer" placeholder="Speech Input Result" rows="15" [value]= "transcript$ | async" ></textarea>
+
