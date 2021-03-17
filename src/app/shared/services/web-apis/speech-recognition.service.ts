@@ -1,6 +1,6 @@
 import { NgIfContext } from '@angular/common';
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 declare var webkitSpeechRecognition: any;
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ declare var webkitSpeechRecognition: any;
 export class SpeechRecognitionService {
   recognition = new webkitSpeechRecognition();
   isListening = false;
-  finalStatement: Observable<string>;
+  statement:  Subject<string> = new Subject<string>();
 
   constructor(private ngZone: NgZone) { }
 
@@ -25,6 +25,7 @@ export class SpeechRecognitionService {
     this.isListening = true;
     this.recognition.start();
     console.log("Speech recognition started");
+    this.onResult().subscribe(this.statement);
   }
 
   stop(): void {
@@ -43,6 +44,7 @@ export class SpeechRecognitionService {
           if (event.results[i].isFinal) {
             words += event.results[i][0].transcript;
             this.ngZone.run(() => observer.next(words));
+            //crazyfuntion(words): <SpeechResult>
           }
           else {
             tempWords += event.results[i][0].transcript;

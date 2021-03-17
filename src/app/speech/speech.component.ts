@@ -11,13 +11,17 @@ import { map } from 'rxjs/operators';
 })
 export class SpeechComponent implements OnInit {
 
-  transcript?: Observable<string>; 
+  transcript?: Observable<string>;
 
   constructor(public speechRecognition: SpeechRecognitionService) { }
 
   ngOnInit(): void {
     this.speechRecognition.initialize();
-    this.captureText();  
+    //this.captureText();
+    this.speechRecognition.statement.subscribe( e => console.log("statement subscription from speech " , e));
+    //this.transcript.subscribe(e =>{
+   //   console.log("transcript subscription from speech " , e)
+   // }); 
   }
   start():void {
     this.speechRecognition.start(); 
@@ -28,7 +32,8 @@ export class SpeechComponent implements OnInit {
   }
   captureText(): void {
     console.log("component initialized"); 
-    this.transcript = this.speechRecognition.onResult()//.pipe(
+    this.transcript = this.speechRecognition.onResult();
+  //.pipe(
   //    map((notification) => {
   //      console.log(`notification 1${notification}`);
   //      return notification;}));
