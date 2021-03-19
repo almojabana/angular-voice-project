@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { fromEventPattern } from 'rxjs';
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
+import { SpeechResults } from '../shared/models/speech-results'
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -11,8 +12,11 @@ import { map } from 'rxjs/operators';
 })
 export class SpeechComponent implements OnInit {
 
-  transcript?: Observable<string>;
-
+  //Usado para probar el componente con strings (ver branch 1)
+  // transcript?: Observable<string>;
+  
+  speechResults: SpeechResults;
+  
   constructor(public speechRecognition: SpeechRecognitionService) { }
 
   ngOnInit(): void {
@@ -30,14 +34,10 @@ export class SpeechComponent implements OnInit {
   stop():void {
     this.speechRecognition.stop(); 
   }
-  captureText(): void {
-    console.log("component initialized"); 
-    this.transcript = this.speechRecognition.onResult();
-  //.pipe(
-  //    map((notification) => {
-  //      console.log(`notification 1${notification}`);
-  //      return notification;}));
-    console.log("transcript", this.transcript);
-  }
+  //captureText(): void { 
+  //   this.speechRecognition.statement.subscribe(this.speechResults);
+ 
+  //   console.log("transcript", this.speechResults);
+  // }
 }
 

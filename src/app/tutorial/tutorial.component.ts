@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs'; 
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
+import { SpeechResults } from '../shared/models/speech-results';
 
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
   styleUrls: ['./tutorial.component.css']
 })
+
 export class TutorialComponent implements OnInit {
-  transcript?: Observable<string>; 
+  speechResults: SpeechResults;
+
   constructor(public speechRecognition:SpeechRecognitionService) { }
 
    ngOnInit(): void {
@@ -18,12 +21,12 @@ export class TutorialComponent implements OnInit {
   //     console.log("transcript subscription from tutorial " , e)
   //   }); 
    }
-  captureText(): void {
-    console.log("component initialized"); 
-    this.transcript = this.speechRecognition.onResult();//.pipe(
-  //    map((notification) => {
-  //      console.log(`notification 1${notification}`);
-  //      return notification;}));
-    console.log("transcript from tutorial", this.transcript);
-  }
+  // captureText(): void {
+  //   console.log("component initialized"); 
+  //   this.transcript = this.speechRecognition.onResult();//.pipe(
+  // //    map((notification) => {
+  // //      console.log(`notification 1${notification}`);
+  // //      return notification;}));
+  //   console.log("transcript from tutorial", this.transcript);
+  // }
 }
