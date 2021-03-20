@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEventPattern } from 'rxjs';
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
-import { Observable } from 'rxjs';
 import { SpeechResults } from '../shared/models/speech-results'
-import { map } from 'rxjs/operators';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-speech',
@@ -15,18 +13,22 @@ export class SpeechComponent implements OnInit {
   //Usado para probar el componente con strings (ver branch 1)
   // transcript?: Observable<string>;
   
-  speechResults: SpeechResults;
+  userAction: string;
+  userPredicate: string; 
   
-  constructor(public speechRecognition: SpeechRecognitionService) { }
+  constructor(
+    public speechRecognition: SpeechRecognitionService,
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
     this.speechRecognition.initialize();
-    //this.captureText();
-    this.speechRecognition.statement.subscribe( e => console.log("statement subscription from speech " , e));
-    //this.transcript.subscribe(e =>{
-   //   console.log("transcript subscription from speech " , e)
-   // }); 
+    this.speechRecognition.statement.subscribe( e =>  { 
+      console.log("statement subscription from speech service " , e);
+       this.captureResult(e);   
+    });
   }
+
   start():void {
     this.speechRecognition.start(); 
   }
@@ -34,10 +36,28 @@ export class SpeechComponent implements OnInit {
   stop():void {
     this.speechRecognition.stop(); 
   }
-  //captureText(): void { 
-  //   this.speechRecognition.statement.subscribe(this.speechResults);
- 
-  //   console.log("transcript", this.speechResults);
-  // }
+
+  captureResult(results:SpeechResults): void  { 
+    this.userAction = results.action; 
+    console.log("action: ", this.userAction);
+
+    this.userPredicate = results.predicate; 
+    console.log("predicate: ", this.userPredicate)
+
+    if (this.userAction === 'navigate') {
+      this.navigator(this.userPredicate); 
+    }
+  }
+
+  navigator(link:string) : void {
+    switch (link) {
+      case ' languages menu':
+        this.router.navigate(['/languages-menu']);
+        break;
+      case ' C sharp tutorials':
+        this.router.navigate(['/language-tutorials/C Sharp']); 
+        break;
+    }
+  }
 }
 

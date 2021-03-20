@@ -69,13 +69,13 @@ export class SpeechRecognitionService {
     let action = "no action";
     let predicate =" no predicate"; 
     let words = finalString.trim();
-     
+
     console.log("finalstring from service: ", finalString)
     this.navigateCommands.forEach(element => {
       console.log("element from navigate commands array: ", element);
       console.log("element matches in navigate commands array:", words.startsWith(element))
       if(words.startsWith(element)){
-        action = "navitage";
+        action = "navigate";
         predicate = finalString.split(element)[1];
         }
     });
