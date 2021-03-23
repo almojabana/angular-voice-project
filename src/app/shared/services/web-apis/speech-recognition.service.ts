@@ -14,7 +14,8 @@ export class SpeechRecognitionService {
   isListening = false;
   statement:  Subject<SpeechResults> = new Subject<SpeechResults>();
   navigateCommands : string[] = ['navigate to', 'go to', 'press']; 
-  writeCommands: string [] = ['write', 'insert', 'right']; 
+  writeCommands: string [] = ['write', 'insert', 'right'];
+  deleteCommands: string[] = [ 'delete', 'erase', 'remove'];  
   
 
   constructor(private ngZone: NgZone) { }
@@ -28,10 +29,15 @@ export class SpeechRecognitionService {
   }
 
   start(): void {
+    if (this.isListening){
+      console.log("isListening", this.isListening)
+      this.stop();
+    }
+    else {
     this.isListening = true;
     this.recognition.start();
     console.log("Speech recognition started");
-    this.onResult().subscribe(this.statement);
+    this.onResult().subscribe(this.statement); }
   }
 
   stop(): void {
@@ -85,8 +91,16 @@ export class SpeechRecognitionService {
       console.log("element matches in write commands array:", words.startsWith(element))
       if(words.startsWith(element)){
         action = "write";
-        predicate = finalString.split(element)[1];
-       
+        predicate = finalString.split(`${element} `)[1];
+        }
+    });
+
+    this.deleteCommands.forEach(element => {
+      console.log("element from write commands array: ", element);
+      console.log("element matches in write commands array:", words.startsWith(element))
+      if(words.startsWith(element)){
+        action = "delete";
+        predicate = finalString.split(`${element} `)[1];
         }
     });
 
