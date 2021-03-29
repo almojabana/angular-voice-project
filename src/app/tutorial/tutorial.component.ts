@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs'; 
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
+import { TutorialService } from '../shared/services/tutorial.service'; 
 import { SpeechResults } from '../shared/models/speech-results';
+import { ActivatedRoute } from '@angular/router';
+import { TutorialUsuario } from '../shared/models/tutorial-usuario'; 
 import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
+import { first } from 'rxjs/operators';
+import { TutorialUsuarioDto } from '../shared/DTO/tutorial-usuario-dto';
 
 @Component({
   selector: 'app-tutorial',
@@ -12,31 +17,72 @@ import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 
 export class TutorialComponent implements OnInit {
   speechResults: SpeechResults;
+  
+  //During development, for testing purposes, the app runs with a test user, user =1
+  userID: number = 1;
+
+  userTutorial: Array<TutorialUsuario>;  
+  question: string; 
+  questionCounter: number = 0; 
   userAnswer: string = '';
 
-  constructor(public speechRecognition: SpeechRecognitionService) { }
+  constructor(
+    public speechRecognition: SpeechRecognitionService, 
+    private tutorialService: TutorialService, 
+    private route: ActivatedRoute
+    ) { }
 
   ngOnInit(): void {
+    this.fetchUserTutorial(); 
+    //this.getQuestion(); 
     this.speechRecognition.statement.subscribe(e => {
       console.log("statement subscription from tutorial ", e);
-      this.captureText(e);
+      this.captureVoiceCode(e);
     });
-
-    //   this.transcript.subscribe(e =>{
-    //     console.log("transcript subscription from tutorial " , e)
-    //   }); 
   }
 
-  captureText(speechResult: SpeechResults): void {
+  fetchUserTutorial(){
+    var tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
+    this.tutorialService.fetchUserTutorial(this.userID.toString(), tutorialID).
+    subscribe(
+      userTutorial => {
+      this.userTutorial = userTutorial;
+      console.log("userTutorial fetched from usertutorialservice ",this.userTutorial); 
+      if (this.userTutorial.length===0) {
+        var dto : TutorialUsuarioDto = { usuario: this.userID, tutorial: parseInt(tutorialID)}; 
+        this.tutorialService.createUserTutorial(dto).subscribe(
+          userTutorial => {
+            this.userTutorial.push(userTutorial);
+            console.log("created userTutorial from usertutorialService ", this.userTutorial) 
+          }
+        );
+      }
+     }); 
+  }   
+
+
+  getQuestion() {
+  //   const name = this.route.snapshot.paramMap.get('id');
+  //   this.tutorialService.getQuestion(id).subscribe(tutorials => {
+  //     this.tutorials = tutorials
+  //   }); 
+ }
+
+ gradeUserAnswer(){
+
+ }
+
+//VOICE FUNCTIONS (CONSIDER MOVING BELOW FUNCTIONS TO A SEPARATE SERVICE******************************************** */
+  captureVoiceCode(speechResult: SpeechResults): void {
 
     let predicate = speechResult.predicate;
 
-    //takes care of spacing in the predicate
+    //manages spacing in the predicate
     if (speechResult.action === 'write') {
       if (this.userAnswer === "") {
-        this.userAnswer += this.dictateCode(predicate);
+        this.userAnswer += this.voiceCodeHelper(predicate);
       }
-      else { this.userAnswer += ' ' + this.dictateCode(predicate); }
+      else { this.userAnswer += ' ' + this.voiceCodeHelper(predicate); }
     }
 
     if (speechResult.action === 'delete' && speechResult.predicate === 'word') {
@@ -60,7 +106,7 @@ export class TutorialComponent implements OnInit {
     }
   }
 
-  dictateCode(predicate: string): string {
+  voiceCodeHelper(predicate: string): string {
     //consider putting this in another function to include in the next if
     let tempPredicate = predicate;
     if (predicate.match("for Loop")) {

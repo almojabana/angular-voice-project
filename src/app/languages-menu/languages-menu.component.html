@@ -1,4 +1,24 @@
-<p>languages-menu works!</p>
-<ul>
-    <li *ngFor = "let language of languages"><a routerLink = "/language-tutorials/{{language.name}}">{{language.name}}</a></li>
-</ul>
+<header>
+    <a href="/languages-menu#main-content">Skip to the languages menu</a>
+    <div class="container" fxLayout="row"> 
+        <mat-toolbar color="primary" class="navbar">
+            <div id="app-name">Tertulia</div>
+            <div id="links">
+                <ul>
+                    <span><li><a routerLink='/languages-menu'>Languages Menu</a></li></span>
+                </ul>
+            </div>
+        </mat-toolbar>
+    </div>
+</header>
+
+<main id="main-content">
+    <h1 tabindex="-1"> Languages Menu</h1>
+    <ul>
+        <li *ngFor = "let language of languages"><a routerLink = "/language-tutorials/{{language.id}}">{{language.name}}</a></li>
+    </ul> 
+</main>
+
+
+
+

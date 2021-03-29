@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-top-navigation',
@@ -6,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./top-navigation.component.css']
 })
 export class TopNavigationComponent implements OnInit {
-
-  constructor() { }
+  
+  constructor(route: ActivatedRoute) {const url: string = route.snapshot.queryParams.toString();
+  console.log( "this url1", url) }
 
   ngOnInit(): void {
+    
   }
 
 }

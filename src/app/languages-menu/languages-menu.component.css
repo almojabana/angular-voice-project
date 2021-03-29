@@ -1,0 +1,17 @@
+.navbar {
+    justify-content: space-between;
+}
+
+li {
+    list-style-type: none;
+}
+
+li a {
+    display:block;
+    color: white;
+    text-decoration: underline;
+}
+
+span {
+    float:center;
+}

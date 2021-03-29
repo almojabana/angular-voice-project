@@ -8,8 +8,8 @@ import { TutorialComponent } from './tutorial/tutorial.component';
 const routes: Routes = [
   { path: '', redirectTo: '/languages-menu', pathMatch: 'full' },
   { path: 'languages-menu', component: LanguagesMenuComponent},
-  { path: 'language-tutorials/:name', component: TutorialsMenuComponent},
-  { path: 'tutorial/:id', component: TutorialComponent }, 
+  { path: 'language-tutorials/:languageName', component: TutorialsMenuComponent},
+  { path: 'tutorial-questions/:tutorialID', component: TutorialComponent }, 
 
 ];
 
