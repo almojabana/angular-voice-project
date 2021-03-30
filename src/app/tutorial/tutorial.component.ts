@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators'; 
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
 import { TutorialService } from '../shared/services/tutorial.service'; 
 import { SpeechResults } from '../shared/models/speech-results';
 import { ActivatedRoute } from '@angular/router';
 import { TutorialUsuario } from '../shared/models/tutorial-usuario'; 
 import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
-import { first } from 'rxjs/operators';
-import { TutorialUsuarioDto } from '../shared/DTO/tutorial-usuario-dto';
+
+import { TutorialUsuarioDTO } from '../shared/models/DTO/user-tutorial-dto';
 
 @Component({
   selector: 'app-tutorial',
@@ -18,7 +19,7 @@ import { TutorialUsuarioDto } from '../shared/DTO/tutorial-usuario-dto';
 export class TutorialComponent implements OnInit {
   speechResults: SpeechResults;
   
-  //During development, for testing purposes, the app runs with a test user, user =1
+  //During development,the app runs with a hardcoded userID, example: user =1
   userID: number = 1;
 
   userTutorial: Array<TutorialUsuario>;  
@@ -49,7 +50,7 @@ export class TutorialComponent implements OnInit {
       this.userTutorial = userTutorial;
       console.log("userTutorial fetched from usertutorialservice ",this.userTutorial); 
       if (this.userTutorial.length===0) {
-        var dto : TutorialUsuarioDto = { usuario: this.userID, tutorial: parseInt(tutorialID)}; 
+        var dto : TutorialUsuarioDTO = { usuarioId: this.userID, tutorialId: parseInt(tutorialID)}; 
         this.tutorialService.createUserTutorial(dto).subscribe(
           userTutorial => {
             this.userTutorial.push(userTutorial);
@@ -62,7 +63,7 @@ export class TutorialComponent implements OnInit {
 
 
   getQuestion() {
-  //   const name = this.route.snapshot.paramMap.get('id');
+     var tutorialID = this.route.snapshot.paramMap.get('tutorialID');
   //   this.tutorialService.getQuestion(id).subscribe(tutorials => {
   //     this.tutorials = tutorials
   //   }); 
@@ -126,7 +127,8 @@ export class TutorialComponent implements OnInit {
     }
 
     //camelcase notation
-    if (predicate.match(/camel case | camelcase/i)) {
+    //debugger;
+    if (predicate.match("camelcase")) {
       let variableName = '';
       let variableNameArr: string[] = predicate.split(/camelcase |camel case/i);
       variableNameArr = variableNameArr[1].toLowerCase().split(" ");
@@ -143,7 +145,7 @@ export class TutorialComponent implements OnInit {
           }
         }
       }
-      tempPredicate = tempPredicate.replace(/camel case .* | camelcase .*/i, ' ' + variableName.trim());
+      tempPredicate = tempPredicate.replace(/camelcase .*/i, ' ' + variableName.trim());
     }
 
     if (predicate.match(/Pascal case/i)) {

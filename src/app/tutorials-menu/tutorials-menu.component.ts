@@ -11,7 +11,7 @@ import { TutorialsMenuService } from '../shared/services//tutorials-menu.service
   styleUrls: ['./tutorials-menu.component.css']
 })
 export class TutorialsMenuComponent implements OnInit {
-  tutorials: Tutorial[] = [];
+  tutorials: Array<Tutorial[]>;
   
   constructor(
     private route: ActivatedRoute,
@@ -22,10 +22,10 @@ export class TutorialsMenuComponent implements OnInit {
   ngOnInit(): void {
     this.getTutorials();
   }
-
+ 
   getTutorials(): void {
-    const name = this.route.snapshot.paramMap.get('languageName');
-    this.tutorialsMenuService.getTutorials(name).subscribe(tutorials => {
+    const languageID = this.route.snapshot.paramMap.get('languageID');
+    this.tutorialsMenuService.getTutorials(languageID).subscribe(tutorials => {
       this.tutorials = tutorials
     });
   }

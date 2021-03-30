@@ -23,10 +23,7 @@ export class LanguagesMenuService {
   getLanguages(): Observable<Language[]> {
     return of(LANGUAGES);
   }
-  // getLanguages(): Observable<Lenguajes[]>{
-  //   return this.http.get<Lenguajes[]>(this.languagesUrl).pipe(
-  //     tap(data=>console.log("data that the service got from backend: ", JSON.stringify(data)))); 
-  // }
+ 
   
 
  
