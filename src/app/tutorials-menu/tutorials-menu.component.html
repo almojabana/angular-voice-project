@@ -1,4 +1,4 @@
-<h2>Language Tutorials</h2>
+<h2 *ngIf="language">{{language.name}} Tutorials</h2>
 <ul>
     <li *ngFor="let tutorial of tutorials">
         <a routerLink="/tutorial-questions/{{tutorial.tutorialId}}">{{tutorial.titulo}}</a>

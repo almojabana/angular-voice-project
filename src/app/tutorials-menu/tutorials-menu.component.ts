@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { TUTORIALS } from '../mock-tutorials';
 import { Tutorial } from '../shared/models/tutorial';
 import { TutorialsMenuService } from '../shared/services//tutorials-menu.service';
+import { Language } from '../shared/models/language';
 
 @Component({
   selector: 'app-tutorials-menu',
@@ -12,6 +13,7 @@ import { TutorialsMenuService } from '../shared/services//tutorials-menu.service
 })
 export class TutorialsMenuComponent implements OnInit {
   tutorials: Array<Tutorial[]>;
+  language: Language; 
   
   constructor(
     private route: ActivatedRoute,
@@ -21,6 +23,7 @@ export class TutorialsMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTutorials();
+    this.getLanguageName(); 
   }
  
   getTutorials(): void {
@@ -28,5 +31,10 @@ export class TutorialsMenuComponent implements OnInit {
     this.tutorialsMenuService.getTutorials(languageID).subscribe(tutorials => {
       this.tutorials = tutorials
     });
+  }
+  getLanguageName(): void {
+    const languageID = this.route.snapshot.paramMap.get('languageID');
+    this.language = this.tutorialsMenuService.getLanguageName(languageID);
+    
   }
 }
