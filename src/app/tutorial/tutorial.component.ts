@@ -7,6 +7,8 @@ import { SpeechResults } from '../shared/models/speech-results';
 import { ActivatedRoute } from '@angular/router';
 import { TutorialUsuario } from '../shared/models/tutorial-usuario'; 
 import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
+import { Pregunta } from '../shared/models/pregunta'; 
+import { RespuestaUsuarioDTO } from '../shared/models/DTO/respuesta-usuario'; 
 
 import { TutorialUsuarioDTO } from '../shared/models/DTO/user-tutorial-dto';
 
@@ -22,10 +24,13 @@ export class TutorialComponent implements OnInit {
   //During development,the app runs with a hardcoded userID, example: user =1
   userID: number = 1;
 
-  userTutorial: Array<TutorialUsuario>;  
-  question: string; 
+  userTutorial: Array<TutorialUsuario>; 
+  uT: TutorialUsuario;  
+  questions: Array<Pregunta[]> 
+  currQuestion: any; 
   questionCounter: number = 0; 
   userAnswer: string = '';
+  tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
 
   constructor(
     public speechRecognition: SpeechRecognitionService, 
@@ -34,44 +39,54 @@ export class TutorialComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.fetchUserTutorial(); 
-    //this.getQuestion(); 
-    this.speechRecognition.statement.subscribe(e => {
-      console.log("statement subscription from tutorial ", e);
-      this.captureVoiceCode(e);
+    this.getUserTutorial(this.tutorialID); 
+    this.getQuestions(this.tutorialID); 
+    this.speechRecognition.statement.subscribe(words => {
+      console.log("statement subscription from tutorial ", words);
+      this.captureVoiceCode(words);
     });
   }
 
-  fetchUserTutorial(){
-    var tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
-    this.tutorialService.fetchUserTutorial(this.userID.toString(), tutorialID).
+  getUserTutorial(tutorialID: string){
+    //var tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
+    this.tutorialService.getUserTutorial(this.userID.toString(), tutorialID).
     subscribe(
       userTutorial => {
       this.userTutorial = userTutorial;
-      console.log("userTutorial fetched from usertutorialservice ",this.userTutorial); 
+      console.log("FETCHED USERTUTORIAL ",this.userTutorial); 
       if (this.userTutorial.length===0) {
-        var dto : TutorialUsuarioDTO = { usuarioId: this.userID, tutorialId: parseInt(tutorialID)}; 
+        var dto : TutorialUsuarioDTO = { 
+          usuarioId: this.userID, tutorialId: parseInt(tutorialID)
+        }; 
         this.tutorialService.createUserTutorial(dto).subscribe(
           userTutorial => {
-            this.userTutorial.push(userTutorial);
-            console.log("created userTutorial from usertutorialService ", this.userTutorial) 
+            this.userTutorial = (userTutorial);
+            console.log("CREATED USERTUTORIAL:  ", this.userTutorial) 
           }
         );
       }
-     }); 
+     }
+    ); 
   }   
 
-
-  getQuestion() {
-     var tutorialID = this.route.snapshot.paramMap.get('tutorialID');
-  //   this.tutorialService.getQuestion(id).subscribe(tutorials => {
-  //     this.tutorials = tutorials
-  //   }); 
- }
-
- gradeUserAnswer(){
-
- }
+  getQuestions(tutorialID: string) {
+   // var tutorialID = this.route.snapshot.paramMap.get('tutorialID');
+    this.tutorialService.getQuestions(tutorialID).subscribe(questions => {
+      this.questions = questions; 
+      this.currQuestion = questions[0]; 
+      console.log("QUESTION: ", this.currQuestion); 
+    }); 
+  }
+ 
+  // gradeAnswer(userAnswer: string){ 
+  //   var dto: RespuestaUsuarioDTO = { 
+  //     respuesta: userAnswer, preguntaID: this., tutorialUsuarioID: this.uT.tutorial_usuario_id}; 
+  //   this.tutorialService.gradeAnswer(dto);
+  // }
+ 
+  diplayNextQuestion(){
+  }
+ 
 
 //VOICE FUNCTIONS (CONSIDER MOVING BELOW FUNCTIONS TO A SEPARATE SERVICE******************************************** */
   captureVoiceCode(speechResult: SpeechResults): void {

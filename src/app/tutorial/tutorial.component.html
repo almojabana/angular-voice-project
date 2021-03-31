@@ -1,3 +1,19 @@
-<p>tutorial works!</p>
-<textarea id="question"></textarea>
-<textarea id="voice-input-answer" placeholder="Write your answer here" rows="10" cols="50" >{{userAnswer}}</textarea> 
+<div><p>Tutorial</p></div>
+
+<div class="question">
+    <textarea id="question" *ngIf= "currQuestion">{{currQuestion.texto}}</textarea>
+</div>
+
+<div class="user-answer">
+    <textarea id="voice-input-answer" 
+    placeholder="Write your answer here" rows="10" cols="50" >
+        {{userAnswer}}
+    </textarea>
+    <!-- <button (click)="gradeAnswer(userAnswer)">Check Answer</button> -->
+</div>
+
+<div class="result">
+
+</div>
+
+ 

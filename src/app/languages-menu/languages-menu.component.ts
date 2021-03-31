@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Language } from '../shared/models/language'; 
-import {Lenguajes } from '../shared/models/lenguaje';
 import { LanguagesMenuService } from '../shared/services/languages-menu.service';
 import  { LANGUAGES } from '../mock-languages';
 import { Observable } from 'rxjs';

@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { SpeechComponent } from './speech/speech.component'; 
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { LanguagesMenuComponent } from './languages-menu/languages-menu.component';
+import { FormsModule } from '@angular/forms'; 
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { LanguagesMenuComponent } from './languages-menu/languages-menu.componen
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule, 
+    MatListModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
