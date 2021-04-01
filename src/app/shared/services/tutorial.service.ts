@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs'; 
-import { tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { TutorialUsuario } from '../models/tutorial-usuario';
 import { TutorialUsuarioDTO } from '../models/DTO/user-tutorial-dto'; 
-import { RespuestaUsuarioDTO } from '../models/DTO/respuesta-usuario'; 
+import { PostRespuestaUsuarioDTO } from '../models/DTO/respuesta-usuario'; 
 import { Pregunta } from '../models/pregunta';
 
 @Injectable({
@@ -20,36 +20,50 @@ export class TutorialService {
     //address for acessing the userTutorial controller
     private userTutorialUrl = this.baseUrl+'/api/TutorialUsuarios/';
     private getQuestionsByTutorialUrl = this.baseUrl +'/api/Preguntas/getQuestionsByTutorial/'; 
-    private postAnswerUrl = this.baseUrl +'/api/RespuestaUsuario/'; 
+    private postAnswerUrl = this.baseUrl +'/api/RespuestaUsuarios/'; 
     
     constructor(
       private http: HttpClient,
     ) { }
 
-  //Retrieves information from the TutorialUsuario table, if the user has previously attempted the tutorial
-  getUserTutorial(userID: string, tutorialID:string ): Observable<Array<TutorialUsuario>> {
-    return  this.http.get<Array<TutorialUsuario>>(`${this.userTutorialUrl}${userID}/${tutorialID}`).pipe(
-        tap(data=>console.log("userTutorial that the tutorial service got from getfunction backend: ", data))); 
+  /****GET UserTutorial:  Retrieves the user's record from the TutorialUsuario table, 
+  if the user has previously attempted the tutorial****/
+  getUserTutorial(userID: string, tutorialID:string ): Observable<TutorialUsuario> {
+    return  this.http
+    .get<TutorialUsuario>(`${this.userTutorialUrl}${userID}/${tutorialID}`)
+    .pipe(map( response => new TutorialUsuario().deserialize(response))); 
+    
   }
 
-  //Sends a dto in order to create a new TutorialUsuario record.
-  createUserTutorial(dto:TutorialUsuarioDTO): Observable<Array<TutorialUsuario>>{ 
-    return this.http.post<Array<TutorialUsuario>>(`${this.userTutorialUrl}`, dto ); 
+  /****POST UserTutorial: Sends a dto in order to create a new TutorialUsuario record.*/
+  createUserTutorial(dto:TutorialUsuarioDTO): Observable<TutorialUsuario>{ 
+    return this.http
+    .post<TutorialUsuario>(`${this.userTutorialUrl}`, dto )
+    .pipe(map( response => new TutorialUsuario().deserialize(response))); 
   }
 
-  getQuestions(tutorialID: string): Observable<Array<Pregunta[]>>{
-    return this.http.get<Array<Pregunta[]>>(`${this.getQuestionsByTutorialUrl}${tutorialID}`); 
+  /****GET Retrieves a list of questions that correspond to the tutorial ****/
+  getQuestions(tutorialID: string): Observable<Pregunta[]> {
+    return this.http
+    .get<Pregunta[]>(`${this.getQuestionsByTutorialUrl}${tutorialID}`)
+    .pipe( map (response => {
+      const arr = JSON.parse(JSON.stringify(response));
+      const questions = arr.map( q => new Pregunta().deserialize(q));
+      return questions; 
+    }));
+
+    /*Brainstorming idea: creating a Question child component of Tutorial
+     *"localhost/tutorial/1"
+     *"localhost/tutorial/1/pregunta/5" 
+     */
   }
 
-  gradeAnswer(dto: RespuestaUsuarioDTO){
-    return this.http.post<Array<RespuestaUsuarioDTO>>(`${this.postAnswerUrl}`, dto);
+  /****POST Saves the user's answer, which is corrected in the backend server API
+   * Retruns the grading result.
+  */
+  gradeAnswer(dto: PostRespuestaUsuarioDTO){
+    return this.http
+    .post<PostRespuestaUsuarioDTO>(`${this.postAnswerUrl}`, dto);
   }
 
-  //Retrieves the questions for the tutorial
- // getQuestions(tutorialID:string):Observable<Array<Question[]>>{}
-
-    // saveUserAnswer(): Observable<>{
-    //   return this.http.post<Lenguajes[]>(this.languagesUrl).pipe(
-    //     tap(data=>console.log("data that the service got from backend: ", JSON.stringify(data)))); 
-    // }
 }

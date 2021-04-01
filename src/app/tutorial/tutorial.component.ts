@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators'; 
+import { first, map, take } from 'rxjs/operators'; 
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
 import { TutorialService } from '../shared/services/tutorial.service'; 
 import { SpeechResults } from '../shared/models/speech-results';
 import { ActivatedRoute } from '@angular/router';
 import { TutorialUsuario } from '../shared/models/tutorial-usuario'; 
-import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 import { Pregunta } from '../shared/models/pregunta'; 
-import { RespuestaUsuarioDTO } from '../shared/models/DTO/respuesta-usuario'; 
+import { PostRespuestaUsuarioDTO } from '../shared/models/DTO/respuesta-usuario'; 
 
 import { TutorialUsuarioDTO } from '../shared/models/DTO/user-tutorial-dto';
 
@@ -24,10 +23,9 @@ export class TutorialComponent implements OnInit {
   //During development,the app runs with a hardcoded userID, example: user =1
   userID: number = 1;
 
-  userTutorial: Array<TutorialUsuario>; 
-  uT: TutorialUsuario;  
-  questions: Array<Pregunta[]> 
-  currQuestion: any; 
+  userTutorial?: TutorialUsuario;  
+  questions: Pregunta[];
+  currQuestion: Pregunta; 
   questionCounter: number = 0; 
   userAnswer: string = '';
   tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
@@ -46,25 +44,55 @@ export class TutorialComponent implements OnInit {
       this.captureVoiceCode(words);
     });
   }
-
+  
   getUserTutorial(tutorialID: string){
-    //var tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
-    this.tutorialService.getUserTutorial(this.userID.toString(), tutorialID).
-    subscribe(
+    this.tutorialService.getUserTutorial(this.userID.toString(), tutorialID).subscribe(
       userTutorial => {
-      this.userTutorial = userTutorial;
-      console.log("FETCHED USERTUTORIAL ",this.userTutorial); 
-      if (this.userTutorial.length===0) {
-        var dto : TutorialUsuarioDTO = { 
-          usuarioId: this.userID, tutorialId: parseInt(tutorialID)
-        }; 
-        this.tutorialService.createUserTutorial(dto).subscribe(
-          userTutorial => {
-            this.userTutorial = (userTutorial);
-            console.log("CREATED USERTUTORIAL:  ", this.userTutorial) 
-          }
-        );
-      }
+      return this.userTutorial = userTutorial;
+      // console.log("FETCHED USERTUTORIAL ",this.userTutorial);
+      // debugger
+      // if(!this.userTutorial.tutorial_usuario_id){
+      //   var dto : TutorialUsuarioDTO = { 
+      //      usuarioId: this.userID, tutorialId: parseInt(tutorialID)
+      //   };
+
+      //   this.tutorialService.createUserTutorial(dto).subscribe(
+      //     userTutorial => {
+      //       this.userTutorial = (userTutorial);
+      //       console.log("CREATED USERTUTORIAL:  ", this.userTutorial) 
+      //     }
+      //   );
+      // }
+
+  // getUserTutorial(tutorialID: string){
+  //   this.tutorialService.getUserTutorial(this.userID.toString(), tutorialID).subscribe(
+  //     userTutorial => {
+  //     this.userTutorial = userTutorial;
+  //     console.log("FETCHED USERTUTORIAL ",this.userTutorial);
+  //     debugger
+  //     if(!this.userTutorial.tutorial_usuario_id){
+  //       var dto : TutorialUsuarioDTO = { 
+  //          usuarioId: this.userID, tutorialId: parseInt(tutorialID)
+  //       };
+
+  //       this.tutorialService.createUserTutorial(dto).subscribe(
+  //         userTutorial => {
+  //           this.userTutorial = (userTutorial);
+  //           console.log("CREATED USERTUTORIAL:  ", this.userTutorial) 
+  //         }
+  //       );
+  //     }
+      // if (this.userTutorial.length===0) {
+      //   var dto : TutorialUsuarioDTO = { 
+      //     usuarioId: this.userID, tutorialId: parseInt(tutorialID)
+      //   }; 
+        // this.tutorialService.createUserTutorial(dto).subscribe(
+        //   userTutorial => {
+        //     this.userTutorial = (userTutorial);
+        //     console.log("CREATED USERTUTORIAL:  ", this.userTutorial) 
+        //   }
+        // );
+      // }
      }
     ); 
   }   
@@ -77,13 +105,19 @@ export class TutorialComponent implements OnInit {
       console.log("QUESTION: ", this.currQuestion); 
     }); 
   }
- 
-  // gradeAnswer(userAnswer: string){ 
-  //   var dto: RespuestaUsuarioDTO = { 
-  //     respuesta: userAnswer, preguntaID: this., tutorialUsuarioID: this.uT.tutorial_usuario_id}; 
-  //   this.tutorialService.gradeAnswer(dto);
-  // }
- 
+  showme(){
+    console.log("TUTORIAL ID: ", this.userTutorial.usuario_id_fk1); 
+  }
+  gradeAnswer(){ 
+    var dto: PostRespuestaUsuarioDTO = { 
+      respuesta: this.userAnswer, 
+      preguntaID: this.currQuestion.preguntaID, 
+      tutorialUsuarioID: this.userTutorial.tutorial_usuario_id
+    };
+    debugger
+    this.tutorialService.gradeAnswer(dto);
+  }
+
   diplayNextQuestion(){
   }
  

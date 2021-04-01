@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'languages-menu', component: LanguagesMenuComponent},
   { path: 'language-tutorials/:languageID', component: TutorialsMenuComponent},
   { path: 'tutorial-questions/:tutorialID', component: TutorialComponent }, 
+  // Brainstorm idea from tutorialService { path: 'tutorial-questions/:tutorialID/question/:questionID', component: QuestionComponent }, 
 
 ];
 
