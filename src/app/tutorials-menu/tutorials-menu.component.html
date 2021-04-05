@@ -1,7 +1,23 @@
-<h2 *ngIf="language">{{language.name}} Tutorials</h2>
-<ul>
-    <li *ngFor="let tutorial of tutorials">
+<header>
+    <a [href]="skipLink">Skip to the main content</a>
+    <div class="container" fxLayout="row"> 
+        <mat-toolbar color="primary" class="navbar">
+            <div id="app-name">Tertulia</div>
+            <div id="links">
+                <ul>
+                    <span><li><a routerLink='/languages-menu'>Languages Menu</a></li></span>
+                </ul>
+            </div>
+        </mat-toolbar>
+    </div>
+</header>
+
+<main id="main-content">
+    <h1 *ngIf="language">{{language.name}} Tutorials</h1>
+    <ul>
+        <li *ngFor="let tutorial of tutorials">
         <a routerLink="/tutorial-questions/{{tutorial.tutorialId}}">{{tutorial.titulo}}</a>
-    </li>
-</ul> 
+        </li>
+    </ul> 
+</main>
  

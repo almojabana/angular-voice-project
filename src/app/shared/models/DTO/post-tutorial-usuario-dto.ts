@@ -1,6 +1,6 @@
 import { Identifiers } from "@angular/compiler";
 
-export class TutorialUsuarioDTO {
+export class PostTutorialUsuarioDTO {
     usuarioId: number; 
     tutorialId: number; 
 }

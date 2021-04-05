@@ -1,19 +1,32 @@
-<div><p>Tutorial</p></div>
+<header>
+    <a [href]="mainContentSkipLink">Skip to the main content</a>
+    <div class="container" fxLayout="row"> 
+        <mat-toolbar color="primary" class="navbar">
+            <div id="app-name">Tertulia</div>
+            <div id="links">
+                <ul>
+                    <span><li><a routerLink='/languages-menu'>Languages Menu</a></li></span>
+                </ul>
+            </div>
+        </mat-toolbar>
+    </div>
+</header>
 
-<div class="question">
-    <textarea id="question" *ngIf= "currQuestion">{{currQuestion.texto}}</textarea>
-</div>
+<main id="main-content">
+    <div><h1>Tutorial</h1></div>
 
-<div class="user-answer">
-    <textarea id="voice-input-answer" 
-    placeholder="Write your answer here" rows="10" cols="50" >
-        {{userAnswer}}
-    </textarea>
-    <!-- <button (click)="gradeAnswer(userAnswer)">Check Answer</button> -->
-</div>
+    <div class="question">
+        <textarea id="question" *ngIf= "currQuestion">{{currQuestion.texto}}</textarea>
+    </div>
 
-<div class="result">
+    <div class="user-answer">
+        <textarea id="voice-input-answer" 
+        placeholder="Write your answer here" rows="10" cols="50" [(ngModel)]="userAnswer"></textarea>
+    
+        <div><button (click)="gradeAnswer(userAnswer)">Check Answer</button></div>
+    </div>
 
-</div>
+
+</main>
 
  

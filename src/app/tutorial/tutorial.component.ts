@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators'; 
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
 import { TutorialService } from '../shared/services/tutorial.service'; 
 import { SpeechResults } from '../shared/models/speech-results';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { TutorialUsuario } from '../shared/models/tutorial-usuario'; 
-import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 import { Pregunta } from '../shared/models/pregunta'; 
-import { RespuestaUsuarioDTO } from '../shared/models/DTO/respuesta-usuario'; 
-
-import { TutorialUsuarioDTO } from '../shared/models/DTO/user-tutorial-dto';
+import { PostRespuestaUsuarioDTO } from '../shared/models/DTO/post-respuesta-usuario-dto'; 
+import { PostTutorialUsuarioDTO } from '../shared/models/DTO/post-tutorial-usuario-dto';
 
 @Component({
   selector: 'app-tutorial',
@@ -24,12 +20,14 @@ export class TutorialComponent implements OnInit {
   //During development,the app runs with a hardcoded userID, example: user =1
   userID: number = 1;
 
-  userTutorial: Array<TutorialUsuario>; 
-  uT: TutorialUsuario;  
+  mainContentSkipLink: string; 
+  userTutorial: TutorialUsuario;   
   questions: Array<Pregunta[]> 
-  currQuestion: any; 
+  currQuestion: Pregunta; 
   questionCounter: number = 0; 
   userAnswer: string = '';
+
+  //the current tutorial's id is retrieved from the current url
   tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
 
   constructor(
@@ -39,56 +37,79 @@ export class TutorialComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    
+    //Creates the skip link for skipping the navigation bar
+    this.mainContentSkipLink = this.route.snapshot.url
+    .toString()
+    .replace(",", "/") + "#main-content"; 
+
+    //Gets the records that will be interacted with during the tutorial
     this.getUserTutorial(this.tutorialID); 
-    this.getQuestions(this.tutorialID); 
+    this.getQuestions(this.tutorialID);
+    
+    //Subscribes to the speech recognition service
     this.speechRecognition.statement.subscribe(words => {
       console.log("statement subscription from tutorial ", words);
       this.captureVoiceCode(words);
     });
   }
 
+  /*
+  Returns the current user's record for the current tutorial. 
+  If a previous attempt has not been completed, it is fetched from the database. 
+  Otherwise, a new record for this attempt is created and returned.
+  */
   getUserTutorial(tutorialID: string){
-    //var tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
     this.tutorialService.getUserTutorial(this.userID.toString(), tutorialID).
     subscribe(
-      userTutorial => {
-      this.userTutorial = userTutorial;
+      userTutorialArray => {
+      this.userTutorial = userTutorialArray[0];
       console.log("FETCHED USERTUTORIAL ",this.userTutorial); 
-      if (this.userTutorial.length===0) {
-        var dto : TutorialUsuarioDTO = { 
+     // if (this.userTutorial.length===0) {
+       if(!this.userTutorial){
+        var dto : PostTutorialUsuarioDTO = { 
           usuarioId: this.userID, tutorialId: parseInt(tutorialID)
         }; 
         this.tutorialService.createUserTutorial(dto).subscribe(
           userTutorial => {
-            this.userTutorial = (userTutorial);
+            this.userTutorial = new TutorialUsuario().deserialize(userTutorial); 
             console.log("CREATED USERTUTORIAL:  ", this.userTutorial) 
           }
         );
-      }
+      }  
      }
     ); 
-  }   
+  }  
 
+  /*
+   * Returns an array of questions for the current tutorial.
+   */
   getQuestions(tutorialID: string) {
    // var tutorialID = this.route.snapshot.paramMap.get('tutorialID');
     this.tutorialService.getQuestions(tutorialID).subscribe(questions => {
       this.questions = questions; 
-      this.currQuestion = questions[0]; 
+      this.currQuestion = new Pregunta().deserialize(questions[0]);  
       console.log("QUESTION: ", this.currQuestion); 
     }); 
   }
  
-  // gradeAnswer(userAnswer: string){ 
-  //   var dto: RespuestaUsuarioDTO = { 
-  //     respuesta: userAnswer, preguntaID: this., tutorialUsuarioID: this.uT.tutorial_usuario_id}; 
-  //   this.tutorialService.gradeAnswer(dto);
-  // }
+  gradeAnswer(userAnswer: string){ 
+    var dto: PostRespuestaUsuarioDTO = { 
+      respuesta: userAnswer, 
+      preguntaId: this.currQuestion.preguntaId, 
+      tutorialUsuarioId: this.userTutorial.tutorialUsuarioId}; 
+    this.tutorialService.gradeAnswer(dto).subscribe(()=>{});
+  }
  
   diplayNextQuestion(){
+    if(this.questionCounter<this.questions.length){
+      this.currQuestion = new Pregunta()
+      .deserialize(this.questions[++this.questionCounter]); 
+    }
   }
  
 
-//VOICE FUNCTIONS (CONSIDER MOVING BELOW FUNCTIONS TO A SEPARATE SERVICE******************************************** */
+//VOICE FUNCTIONS (CONSIDER MOVING BELOW FUNCTIONS TO A SEPARATE SERVICE************/
   captureVoiceCode(speechResult: SpeechResults): void {
 
     let predicate = speechResult.predicate;
@@ -141,8 +162,6 @@ export class TutorialComponent implements OnInit {
       tempPredicate = tempPredicate.replace("a string variable", "string");
     }
 
-    //camelcase notation
-    //debugger;
     if (predicate.match("camelcase")) {
       let variableName = '';
       let variableNameArr: string[] = predicate.split(/camelcase |camel case/i);

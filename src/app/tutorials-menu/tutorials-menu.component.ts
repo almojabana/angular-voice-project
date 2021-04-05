@@ -14,6 +14,7 @@ import { Language } from '../shared/models/language';
 export class TutorialsMenuComponent implements OnInit {
   tutorials: Array<Tutorial[]>;
   language: Language; 
+  skipLink: string; 
   
   constructor(
     private route: ActivatedRoute,
@@ -22,6 +23,7 @@ export class TutorialsMenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.skipLink = this.route.url.toString()+"#main-content";
     this.getTutorials();
     this.getLanguageName(); 
   }

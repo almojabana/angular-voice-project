@@ -41,7 +41,7 @@ export class SpeechComponent implements OnInit {
     this.userAction = results.action; 
     console.log("action: ", this.userAction);
 
-    this.userPredicate = results.predicate; 
+    this.userPredicate = results.predicate.trim(); 
     console.log("predicate: ", this.userPredicate)
 
     if (this.userAction === 'navigate') {
@@ -51,11 +51,15 @@ export class SpeechComponent implements OnInit {
 
   navigator(link:string) : void {
     switch (link) {
-      case ' languages menu':
+      case 'languages menu':
         this.router.navigate(['/languages-menu']);
         break;
-      case ' C sharp tutorials':
-        this.router.navigate(['/language-tutorials/C Sharp']); 
+      case 'see tutorials':
+        this.router.navigate(['/language-tutorials/1']); 
+        break;
+      case 'Java tutorial': 
+      case 'Java tutorials': 
+        this.router.navigate(['/language-tutorials/6']);
         break;
     }
   }

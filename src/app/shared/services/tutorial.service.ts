@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs'; 
-import { tap } from 'rxjs/operators';
 import { TutorialUsuario } from '../models/tutorial-usuario';
-import { TutorialUsuarioDTO } from '../models/DTO/user-tutorial-dto'; 
-import { RespuestaUsuarioDTO } from '../models/DTO/respuesta-usuario'; 
+import { PostTutorialUsuarioDTO } from '../models/DTO/post-tutorial-usuario-dto'; 
+import { PostRespuestaUsuarioDTO } from '../models/DTO/post-respuesta-usuario-dto'; 
 import { Pregunta } from '../models/pregunta';
 
 @Injectable({
@@ -17,10 +16,10 @@ export class TutorialService {
     //Address for the backend API server
     baseUrl = 'https://localhost:44375'; 
     
-    //address for acessing the userTutorial controller
+    //address for acessing the API Controllers
     private userTutorialUrl = this.baseUrl+'/api/TutorialUsuarios/';
     private getQuestionsByTutorialUrl = this.baseUrl +'/api/Preguntas/getQuestionsByTutorial/'; 
-    private postAnswerUrl = this.baseUrl +'/api/RespuestaUsuario/'; 
+    private postAnswerUrl = this.baseUrl +'/api/RespuestaUsuarios'; 
     
     constructor(
       private http: HttpClient,
@@ -28,12 +27,11 @@ export class TutorialService {
 
   //Retrieves information from the TutorialUsuario table, if the user has previously attempted the tutorial
   getUserTutorial(userID: string, tutorialID:string ): Observable<Array<TutorialUsuario>> {
-    return  this.http.get<Array<TutorialUsuario>>(`${this.userTutorialUrl}${userID}/${tutorialID}`).pipe(
-        tap(data=>console.log("userTutorial that the tutorial service got from getfunction backend: ", data))); 
+    return  this.http.get<Array<TutorialUsuario>>(`${this.userTutorialUrl}${userID}/${tutorialID}`);
   }
 
   //Sends a dto in order to create a new TutorialUsuario record.
-  createUserTutorial(dto:TutorialUsuarioDTO): Observable<Array<TutorialUsuario>>{ 
+  createUserTutorial(dto:PostTutorialUsuarioDTO): Observable<Array<TutorialUsuario>>{ 
     return this.http.post<Array<TutorialUsuario>>(`${this.userTutorialUrl}`, dto ); 
   }
 
@@ -41,15 +39,7 @@ export class TutorialService {
     return this.http.get<Array<Pregunta[]>>(`${this.getQuestionsByTutorialUrl}${tutorialID}`); 
   }
 
-  gradeAnswer(dto: RespuestaUsuarioDTO){
-    return this.http.post<Array<RespuestaUsuarioDTO>>(`${this.postAnswerUrl}`, dto);
+  gradeAnswer(dto: PostRespuestaUsuarioDTO){
+    return this.http.post(`${this.postAnswerUrl}`, dto);
   }
-
-  //Retrieves the questions for the tutorial
- // getQuestions(tutorialID:string):Observable<Array<Question[]>>{}
-
-    // saveUserAnswer(): Observable<>{
-    //   return this.http.post<Lenguajes[]>(this.languagesUrl).pipe(
-    //     tap(data=>console.log("data that the service got from backend: ", JSON.stringify(data)))); 
-    // }
 }
