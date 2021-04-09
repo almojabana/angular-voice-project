@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
 import { TutorialUsuario } from '../models/tutorial-usuario';
 import { PostTutorialUsuarioDTO } from '../models/DTO/post-tutorial-usuario-dto'; 
 import { PostRespuestaUsuarioDTO } from '../models/DTO/post-respuesta-usuario-dto'; 
 import { Pregunta } from '../models/pregunta';
+import { ResultadoDTO } from '../models/DTO/resultado-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class TutorialService {
     return this.http.get<Array<Pregunta[]>>(`${this.getQuestionsByTutorialUrl}${tutorialID}`); 
   }
 
-  gradeAnswer(dto: PostRespuestaUsuarioDTO){
-    return this.http.post(`${this.postAnswerUrl}`, dto);
+  gradeAnswer(dto: PostRespuestaUsuarioDTO): Observable<ResultadoDTO>{
+    return this.http.post<ResultadoDTO>(`${this.postAnswerUrl}`, dto);
   }
 }

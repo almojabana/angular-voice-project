@@ -15,19 +15,22 @@ import { PostTutorialUsuarioDTO } from '../shared/models/DTO/post-tutorial-usuar
 })
 
 export class TutorialComponent implements OnInit {
-  speechResults: SpeechResults;
+
+  //Class Properties----------------------------------------------------
   
+  //speechResults: SpeechResults;
   //During development,the app runs with a hardcoded userID, example: user =1
   userID: number = 1;
-
   mainContentSkipLink: string; 
   userTutorial: TutorialUsuario;   
   questions: Array<Pregunta[]> 
   currQuestion: Pregunta; 
   questionCounter: number = 0; 
-  userAnswer: string = '';
+  userAnswer: string = "";
+  totalPoints: number = 0; 
+  currResult: number = -1; 
 
-  //the current tutorial's id is retrieved from the current url
+  //the current tutorial's id is retrieved from the component url
   tutorialID = this.route.snapshot.paramMap.get('tutorialID'); 
 
   constructor(
@@ -37,35 +40,39 @@ export class TutorialComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    
     //Creates the skip link for skipping the navigation bar
-    this.mainContentSkipLink = this.route.snapshot.url
+    this.mainContentSkipLink = 
+    this.route.snapshot.url
     .toString()
     .replace(",", "/") + "#main-content"; 
 
-    //Gets the records that will be interacted with during the tutorial
+    //Gets the records that will be used during the tutorial
     this.getUserTutorial(this.tutorialID); 
     this.getQuestions(this.tutorialID);
     
-    //Subscribes to the speech recognition service
-    this.speechRecognition.statement.subscribe(words => {
-      console.log("statement subscription from tutorial ", words);
-      this.captureVoiceCode(words);
+    //Captures voice commands by subscribing to the speech recognition service
+    this.speechRecognition.statement.subscribe(command => {
+      console.log("statement subscription from tutorial ", command);
+      this.captureVoiceCommand(command);
     });
   }
 
+  //Class Methods-----------------------------------------------------------
+
+
   /*
-  Returns the current user's record for the current tutorial. 
-  If a previous attempt has not been completed, it is fetched from the database. 
-  Otherwise, a new record for this attempt is created and returned.
+  * getUserTutorial returns the user's record for the current tutorial.
+  * The tutorial id and the user's id are used to search for an incomplete 
+  * previous attempt. If none is found, a new record is created and the dto's 
+  * content is  captured in a class property. 
   */
   getUserTutorial(tutorialID: string){
-    this.tutorialService.getUserTutorial(this.userID.toString(), tutorialID).
-    subscribe(
+    this.tutorialService
+    .getUserTutorial(this.userID.toString(), tutorialID)
+    .subscribe(
       userTutorialArray => {
       this.userTutorial = userTutorialArray[0];
       console.log("FETCHED USERTUTORIAL ",this.userTutorial); 
-     // if (this.userTutorial.length===0) {
        if(!this.userTutorial){
         var dto : PostTutorialUsuarioDTO = { 
           usuarioId: this.userID, tutorialId: parseInt(tutorialID)
@@ -82,10 +89,10 @@ export class TutorialComponent implements OnInit {
   }  
 
   /*
-   * Returns an array of questions for the current tutorial.
+   * The getQuestions function fetches an array of questions for the current tutorial.
+   * The question array is assigned to a class property.
    */
   getQuestions(tutorialID: string) {
-   // var tutorialID = this.route.snapshot.paramMap.get('tutorialID');
     this.tutorialService.getQuestions(tutorialID).subscribe(questions => {
       this.questions = questions; 
       this.currQuestion = new Pregunta().deserialize(questions[0]);  
@@ -93,26 +100,51 @@ export class TutorialComponent implements OnInit {
     }); 
   }
  
+  /* 
+  * The gradeAnswer function is activated when the user submits an answer. 
+  * The answer and the current question id are used to create a 
+  * DTO that is sent to the backend server.
+  * The  graded result is captured in a class property.
+  * Total points are updated.
+  */
   gradeAnswer(userAnswer: string){ 
+    
     var dto: PostRespuestaUsuarioDTO = { 
       respuesta: userAnswer, 
       preguntaId: this.currQuestion.preguntaId, 
-      tutorialUsuarioId: this.userTutorial.tutorialUsuarioId}; 
-    this.tutorialService.gradeAnswer(dto).subscribe(()=>{});
+      tutorialUsuarioId: this.userTutorial.tutorialUsuarioId
+    }; 
+
+    this.tutorialService.gradeAnswer(dto).subscribe((result)=>{
+      this.currResult = result.resultado;
+      this.totalPoints+= result.resultado;
+      console.log("result: ", this.currResult); 
+    });
   }
  
-  diplayNextQuestion(){
+  displayNextQuestion(){
+    this.questionCounter+=1; 
+    
     if(this.questionCounter<this.questions.length){
       this.currQuestion = new Pregunta()
-      .deserialize(this.questions[++this.questionCounter]); 
+      .deserialize(this.questions[this.questionCounter]); 
+      this.currResult = -1; 
+      this.userAnswer = ""; 
     }
+    else {
+      this.endTutorial(this.userTutorial)
+    }
+  }
+
+  endTutorial(userTutorial: TutorialUsuario){
+    console.log("TUTORIAL ENDED")
   }
  
 
 //VOICE FUNCTIONS (CONSIDER MOVING BELOW FUNCTIONS TO A SEPARATE SERVICE************/
-  captureVoiceCode(speechResult: SpeechResults): void {
+  captureVoiceCommand(speechResult: SpeechResults): void {
 
-    let predicate = speechResult.predicate;
+    let predicate = speechResult.predicate.trim();
 
     //manages spacing in the predicate
     if (speechResult.action === 'write') {
@@ -122,7 +154,7 @@ export class TutorialComponent implements OnInit {
       else { this.userAnswer += ' ' + this.voiceCodeHelper(predicate); }
     }
 
-    if (speechResult.action === 'delete' && speechResult.predicate === 'word') {
+    else if (speechResult.action === 'delete' && speechResult.predicate === 'word') {
 
       let tempArray: string[] = this.userAnswer.split(' ');
       this.userAnswer = '';
@@ -134,12 +166,21 @@ export class TutorialComponent implements OnInit {
           this.userAnswer += tempArray[idx] + ' ';
         }
       }
-      console.log("temparray", tempArray)
-
     }
 
-    if (speechResult.action === 'delete' && speechResult.predicate === 'everything') {
+    else if (speechResult.action === 'delete' && speechResult.predicate === 'everything') {
       this.userAnswer = '';
+    }
+
+    else if(speechResult.action === 'navigate') {
+      if(speechResult.predicate === ' next'){
+        this.displayNextQuestion(); 
+      }
+      else if(speechResult.predicate === ' check answer'){
+        this.gradeAnswer(this.userAnswer); 
+      }
+      else { console.log( ":(")}
+      
     }
   }
 

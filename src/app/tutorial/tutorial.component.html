@@ -26,7 +26,16 @@
         <div><button (click)="gradeAnswer(userAnswer)">Check Answer</button></div>
     </div>
 
+    <div class="correct-result" *ngIf="currResult>0">
+        <div ><p>Correct!</p></div>
+        <div><button (click)="displayNextQuestion()">Next</button></div>
+    </div>
 
+    <div class="incorrect-result" *ngIf="currResult==0">
+        <div ><p>Incorrect</p></div>
+        <div><button (click)="displayNextQuestion()">Next</button></div>
+    </div>
+    
 </main>
 
  
