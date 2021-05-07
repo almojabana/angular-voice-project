@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { SpeechResults } from '../../models/speech-results';
 
 declare var webkitSpeechRecognition: any;
+declare var webkitSpeechGrammarList: any;
 @Injectable({
   providedIn: 'root'
 })
@@ -11,16 +12,20 @@ declare var webkitSpeechRecognition: any;
 
 export class SpeechRecognitionService {
   recognition = new webkitSpeechRecognition();
+  grammar = '#JSGF V1.0;grammar keywords; public <keyword> = write false | false | true';
+  speechRecognitionList = new webkitSpeechGrammarList();
   isListening = false;
   statement:  Subject<SpeechResults> = new Subject<SpeechResults>();
-  navigateCommands : string[] = ['navigate to', 'go to', 'press']; 
-  writeCommands: string [] = ['write', 'insert', 'right'];
+  navigateCommands : string[] = ['navigate to ', 'go to ', 'press ']; 
+  writeCommands: string [] = ['write ', 'insert ', 'right '];
   deleteCommands: string[] = [ 'delete', 'erase', 'remove'];  
   
 
   constructor(private ngZone: NgZone) { }
 
   initialize(): void {
+    this.speechRecognitionList.addFromString(this.grammar, 1);
+    this.recognition.grammars = this.speechRecognitionList;
     this.recognition.lang = 'en-US';
     this.recognition.continuous = true;
     this.recognition.interimResults = true;
@@ -73,7 +78,7 @@ export class SpeechRecognitionService {
 
   speechResult(finalString:string): SpeechResults {
     let action = "no action";
-    let predicate =" no predicate"; 
+    let predicate ="no predicate"; 
     let words = finalString.trim();
 
     console.log("finalstring from service: ", finalString)
@@ -91,7 +96,7 @@ export class SpeechRecognitionService {
       console.log("element matches in write commands array:", words.startsWith(element))
       if(words.startsWith(element)){
         action = "write";
-        predicate = finalString.split(`${element} `)[1];
+        predicate = finalString.split(element)[1];
         }
     });
 

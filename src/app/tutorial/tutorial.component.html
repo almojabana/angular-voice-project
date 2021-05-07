@@ -2,10 +2,11 @@
     <a [href]="mainContentSkipLink">Skip to the main content</a>
     <div class="container" fxLayout="row"> 
         <mat-toolbar color="primary" class="navbar">
-            <div id="app-name">Tertulia</div>
-            <div id="links">
+            <div id="app-name"></div>
+            <div>
                 <ul>
                     <span><li><a routerLink='/languages-menu'>Languages Menu</a></li></span>
+                    <span><li><a routerLink='/user-profile/'></a>User Profile</li></span>
                 </ul>
             </div>
         </mat-toolbar>
@@ -13,18 +14,25 @@
 </header>
 
 <main id="main-content">
-    <div><h1>Tutorial</h1></div>
-
-    <div class="question">
-        <textarea id="question" *ngIf= "currQuestion">{{currQuestion.texto}}</textarea>
-    </div>
-
-    <div class="user-answer">
-        <textarea id="voice-input-answer" 
-        placeholder="Write your answer here" rows="10" cols="50" [(ngModel)]="userAnswer"></textarea>
+    <div><h1 *ngIf="tutorial">{{tutorial.titulo}} Tutorial</h1></div>
+    <div class="tutorialbox">
+        <div class="question">
+            <div id="question" *ngIf="currQuestion" [innerHTML]= "currQuestion.texto"></div>
+        </div>
     
-        <div><button (click)="gradeAnswer(userAnswer)">Check Answer</button></div>
+        <div class="user-answer">
+            <textarea id="voice-input-answer" 
+            placeholder="Write your answer here" rows="10" cols="50" [(ngModel)]="userAnswer"></textarea>
+        </div>
+        <div class="options-box" *ngFor="let option of options; let i = index" [attr.data-index]="i">
+            <ul><li>option{{i+1}}: {{option}}</li></ul>
+        </div>
     </div>
+
+    <div class="buttons" *ngIf="currResult<0">
+        <button (click)="gradeAnswer(userAnswer)">Check Answer</button>
+        <button (click)="displayNextQuestion()">Skip Question</button>
+   </div>
 
     <div class="correct-result" *ngIf="currResult>0">
         <div ><p>Correct!</p></div>

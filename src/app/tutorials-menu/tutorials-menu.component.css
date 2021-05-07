@@ -1,0 +1,29 @@
+.navbar {
+    justify-content: space-between;
+}
+
+.navbar li {
+    list-style-type: none;
+    float: left;
+}
+
+.navbar li a {
+    display:block;
+    padding-left: 1rem;
+    color: white;
+    text-decoration: none; 
+}
+
+span {
+    float:center;
+}
+
+.active {
+    text-decoration: underline;
+    float: center;
+    
+}
+
+a:hover {
+    text-decoration: underline;
+}

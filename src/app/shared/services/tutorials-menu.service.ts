@@ -17,11 +17,7 @@ export class TutorialsMenuService {
   private tutorialUrl = this.baseUrl+'/api/Tutorials/'
 
   constructor(private http: HttpClient) { }
-  /*Retrieves mock tutorials from the mock-tutorials file */
-  // getTutorials(id:string): Observable<Tutorial[]> {
-  //   const tutorials = of(TUTORIALS.filter(tutorial => tutorial.language.toString() === id));
-  //   return tutorials;
-  // }
+ 
   getTutorials(languageId:string):Observable<Array<Tutorial[]>>{
     return this.http.get<Array<Tutorial[]>>(`${this.tutorialUrl}${languageId}`).pipe(
       tap(data=>console.log("tutorials that the tutorial service got from backend: ", data)));; 
@@ -29,7 +25,7 @@ export class TutorialsMenuService {
 
   getLanguageName(languageID:string): Language {
    var language = LANGUAGES.find(l =>l.id === Number(languageID)); 
-   return language; 
+   return language;  
   }
 }
  

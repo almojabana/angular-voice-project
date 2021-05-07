@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
-import { SpeechResults } from '../shared/models/speech-results'
-import { Router } from '@angular/router'; 
+import { SpeechResults } from '../shared/models/speech-results';
+import { VoiceNavigationService} from '../shared/services/voice-navigation.service';
+
 
 @Component({
   selector: 'app-speech',
@@ -18,7 +19,7 @@ export class SpeechComponent implements OnInit {
   
   constructor(
     public speechRecognition: SpeechRecognitionService,
-    private router: Router
+    private navigationService: VoiceNavigationService,
     ) { }
 
   ngOnInit(): void {
@@ -33,7 +34,7 @@ export class SpeechComponent implements OnInit {
     this.speechRecognition.start(); 
   }
 
-  stop():void {
+  stop():void { 
     this.speechRecognition.stop(); 
   }
 
@@ -45,11 +46,12 @@ export class SpeechComponent implements OnInit {
     console.log("predicate: ", this.userPredicate)
 
     if (this.userAction === 'navigate') {
-      this.navigator(this.userPredicate); 
+      this.navigationService.generalNavigator(this.userPredicate); 
     }
+    else{;}
   }
 
-  navigator(link:string) : void {
+ /* navigator(link:string) : void {
     switch (link) {
       case 'languages menu':
         this.router.navigate(['/languages-menu']);
@@ -63,5 +65,6 @@ export class SpeechComponent implements OnInit {
         break;
     }
   }
-}
+  */
+} 
 

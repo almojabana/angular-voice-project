@@ -2,16 +2,29 @@
     justify-content: space-between;
 }
 
-li {
+.navbar li {
     list-style-type: none;
+    float: left;
 }
 
-li a {
+.navbar li a {
     display:block;
-    color: black;
-    text-decoration: underline;
+    padding-inline: 1rem;
+    color: white; 
+    text-decoration: none; 
 }
 
 span {
     float:center;
+}
+
+.active {
+    border-style: solid;
+    border-color: lightblue ;
+    float: center;
+    
+}
+
+a:hover {
+    text-decoration: underline;
 }

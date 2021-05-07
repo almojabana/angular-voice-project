@@ -21,7 +21,7 @@ export class LanguagesMenuService {
   ) { }
   
   getLanguages(): Observable<Language[]> {
-    return of(LANGUAGES);
+    return of(LANGUAGES); 
   }
  
   
