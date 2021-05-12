@@ -13,7 +13,7 @@ import { SpeechResults } from '../shared/models/speech-results';
   styleUrls: ['./tutorials-menu.component.css']
 })
 export class TutorialsMenuComponent implements OnInit {
-  tutorials: Array<Tutorial[]>;
+  tutorials: Array<Tutorial[]>; //boom
   language: Language; 
   skipLink: string; 
   userAction: string;
@@ -29,7 +29,11 @@ export class TutorialsMenuComponent implements OnInit {
   ngOnInit(): void {
     this.skipLink = this.route.url.toString()+"#main-content";
     this.getTutorials();
-    this.getLanguageName(); 
+    this.getLanguageName();
+    this.speechRecognition.statement.subscribe(command => {
+      console.log("statement subscription from menu ", command);
+      this.captureVoiceCommand(command);
+    }); 
   }
  
   getTutorials(): void {
@@ -43,17 +47,16 @@ export class TutorialsMenuComponent implements OnInit {
     this.language = this.tutorialsMenuService.getLanguageName(languageID);
     
   }
-
-  captureResult(results:SpeechResults): void  { 
+  captureVoiceCommand(results:SpeechResults): void  { 
     this.userAction = results.action; 
     console.log("action: ", this.userAction);
 
     this.userPredicate = results.predicate.trim(); 
     console.log("predicate: ", this.userPredicate)
-
-    // if (this.userAction === 'navigate') {
-    //   this.navigationService.tutorialsMenuNavigator(this.getTutorialName(this.userPredicate)); 
-    //}
+    if (this.userAction === 'navigate') {
+      console.log("I got here!")
+      this.navigationService.tutorialsMenuNavigator(results.predicate, this.tutorials); 
+    }
   }
 
   // getTutorialName(predicate : string): String {

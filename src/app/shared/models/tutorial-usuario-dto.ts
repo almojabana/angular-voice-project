@@ -7,5 +7,5 @@ export class TutorialUsuarioDTO {
      deserialize(input: any): this {
           Object.assign(this, input);
           return this;
-     }
+     } 
 }

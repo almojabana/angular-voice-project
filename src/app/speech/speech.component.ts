@@ -25,7 +25,6 @@ export class SpeechComponent implements OnInit {
   ngOnInit(): void {
     this.speechRecognition.initialize();
     this.speechRecognition.statement.subscribe( e =>  { 
-      console.log("statement subscription from speech service " , e);
        this.captureResult(e);   
     });
   }
@@ -50,21 +49,5 @@ export class SpeechComponent implements OnInit {
     }
     else{;}
   }
-
- /* navigator(link:string) : void {
-    switch (link) {
-      case 'languages menu':
-        this.router.navigate(['/languages-menu']);
-        break;
-      case 'see tutorials':
-        this.router.navigate(['/language-tutorials/1']); 
-        break;
-      case 'Java tutorial': 
-      case 'Java tutorials': 
-        this.router.navigate(['/language-tutorials/6']);
-        break;
-    }
-  }
-  */
 } 
 

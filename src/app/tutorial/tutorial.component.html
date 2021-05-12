@@ -1,4 +1,4 @@
-<header>
+<header> 
     <a [href]="mainContentSkipLink">Skip to the main content</a>
     <div class="container" fxLayout="row"> 
         <mat-toolbar color="primary" class="navbar">
@@ -15,35 +15,48 @@
 
 <main id="main-content">
     <div><h1 *ngIf="tutorial">{{tutorial.titulo}} Tutorial</h1></div>
-    <div class="tutorialbox">
+    <div></div>
+    <div class="tutorialbox" *ngIf="!isFinished">
         <div class="question">
+            <h2>Question</h2>
             <div id="question" *ngIf="currQuestion" [innerHTML]= "currQuestion.texto"></div>
         </div>
     
         <div class="user-answer">
-            <textarea id="voice-input-answer" 
+            <label for="user-input">Your Answer</label>
+            <textarea id="user-input" 
             placeholder="Write your answer here" rows="10" cols="50" [(ngModel)]="userAnswer"></textarea>
+            
+            <div class="buttons" *ngIf="currResult<0">
+                <button (click)="gradeAnswer(userAnswer)">Check Answer</button>
+                <button (click)="displayNextQuestion()">Skip Question</button>
+            </div>
         </div>
         <div class="options-box" *ngFor="let option of options; let i = index" [attr.data-index]="i">
             <ul><li>option{{i+1}}: {{option}}</li></ul>
         </div>
-    </div>
-
-    <div class="buttons" *ngIf="currResult<0">
-        <button (click)="gradeAnswer(userAnswer)">Check Answer</button>
-        <button (click)="displayNextQuestion()">Skip Question</button>
-   </div>
-
-    <div class="correct-result" *ngIf="currResult>0">
-        <div ><p>Correct!</p></div>
-        <div><button (click)="displayNextQuestion()">Next</button></div>
-    </div>
-
-    <div class="incorrect-result" *ngIf="currResult==0">
-        <div ><p>Incorrect</p></div>
-        <div><button (click)="displayNextQuestion()">Next</button></div>
-    </div>
     
+        <div class="correct-result" *ngIf="currResult>0">
+            <div ><p>Correct!</p></div>
+            <div><button (click)="displayNextQuestion()">Next</button></div>
+        </div>
+    
+        <div class="incorrect-result" *ngIf="currResult==0">
+            <div ><p>Incorrect</p></div>
+            <div><button (click)="displayNextQuestion()">Next</button></div>
+        </div>
+    </div>
+
+    <div class="results" *ngIf="isFinished">
+        <div class="satisfactory" *ngIf="passedTutorial">
+            <h2>Final Results</h2>
+            <p>Congratulations, you have passed the tutorial! Your final score is: {{finalScore}}</p>
+        </div>
+        <div class="unsatisfactory" *ngIf="!passedTutorial">
+            <h2>Final Results</h2>
+            <p>Don't give up! Final score: {{finalScore}}</p>
+        </div>
+    </div>   
 </main>
 
  

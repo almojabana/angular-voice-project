@@ -84,7 +84,7 @@ export class TutorialService {
    * @param dto 
    * @returns 
    */
-  endTutorial(userTutorialId: number, dto: TutorialUsuarioDTO): Observable<void> {
+  updateUserTutorial(userTutorialId: number, dto: TutorialUsuarioDTO): Observable<void> {
     return this.http.put<void>(`${this.userTutorialUrl}${userTutorialId}`, dto); 
   }
 }
