@@ -2,15 +2,17 @@
 * tutorial component's CRUD methods.
 */
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { TutorialUsuarioDTO } from '../models/tutorial-usuario-dto';
 import { PostTutorialUsuarioDTO } from '../models/post-tutorial-usuario-dto'; 
 import { PostRespuestaUsuarioDTO } from '../models/post-respuesta-usuario-dto'; 
 import { Pregunta } from '../models/pregunta';
 import { ResultadoDTO } from '../models/resultado-dto';
 import { Tutorial } from '../models/tutorial';
+import { TutorialNotes} from '../models/tutorial-notes';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +28,12 @@ export class TutorialService {
   private userTutorialUrl = this.baseUrl+'/api/TutorialUsuarios/';
   private getTutorialQuestionsUrl = this.baseUrl +'/api/Preguntas/getQuestionsByTutorial/'; 
   private postAnswerUrl = this.baseUrl +'/api/RespuestaUsuarios';
-  private getTutorialUrl = this.baseUrl + '/api/Tutorials/Tutorial/'; 
+  private getTutorialUrl = this.baseUrl + '/api/Tutorials/Tutorial/';
+  private tutorialNotesUrl = 'src/app/tutorial-notes';
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
     
   //Lists the services used by this service, for dependency injection.
   constructor(
@@ -86,5 +93,21 @@ export class TutorialService {
    */
   updateUserTutorial(userTutorialId: number, dto: TutorialUsuarioDTO): Observable<void> {
     return this.http.put<void>(`${this.userTutorialUrl}${userTutorialId}`, dto); 
+  }
+
+  getNotes(id: number): Observable<TutorialNotes> {
+    debugger;
+    const url = `${this.tutorialNotesUrl}/${id}`;
+    return this.http.get<TutorialNotes>(url).pipe(
+      tap(_ => console.log(`fetched notes id=${id}`)),
+      catchError(this.handleError<TutorialNotes>(`getNotes id=${id}`))
+    );
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error); 
+      return of(result as T);
+    };
   }
 }

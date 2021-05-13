@@ -1,42 +1,41 @@
+
+div{
+    font-size: large;
+}
 h1 {
     justify-content: center;
 }
 
 textarea {
     resize: none;
-}
-
-.navbar {
-    justify-content: space-between;
-}
-
-.navbar li {
-    list-style-type: none;
-    float: left;
-}
-
-.navbar li a {
     display:block;
-    padding-right: 1rem;
+}
+
+label {
+    display:block;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
     color: white;
-    float: center; 
-    text-decoration: none; 
-}
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111;
+  }
 
-span {
-    float:center;
-}
-
-.navbar .active {
-    text-decoration: underline;
-    float: center;
-    
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.tutorialbox {
-    display: block; 
-}

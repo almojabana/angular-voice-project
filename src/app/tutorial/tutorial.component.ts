@@ -8,12 +8,14 @@ import { Pregunta } from '../shared/models/pregunta';
 import { PostRespuestaUsuarioDTO } from '../shared/models/post-respuesta-usuario-dto';
 import { PostTutorialUsuarioDTO } from '../shared/models/post-tutorial-usuario-dto';
 import { Tutorial } from '../shared/models/tutorial';
+import { TUTORIALNOTES} from '../tutorial-notes'; 
+import { TutorialNotes } from '../shared/models/tutorial-notes';
 
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
   styleUrls: ['./tutorial.component.css']
-})
+})  
 
 export class TutorialComponent implements OnInit {
 
@@ -33,6 +35,7 @@ export class TutorialComponent implements OnInit {
   isFinished: boolean = false;
   tutorial: Tutorial;
   options: string[];
+  notes: TutorialNotes; 
   //used in the html template
   passedTutorial: boolean = false;
 
@@ -125,7 +128,8 @@ export class TutorialComponent implements OnInit {
   }
 
   displayTutorialNotes(tutorialID: string) {
-
+    this.tutorialService.getNotes(parseInt(tutorialID))
+    .subscribe( notes => this.notes = notes);
   }
 
   /**
@@ -146,7 +150,6 @@ export class TutorialComponent implements OnInit {
       //Current results and total points are updated 
       this.currResult = result.resultado;
       this.totalPoints += result.resultado;
-      this.totalPossiblePoints += this.currQuestion.valor;
     });
   }
 
@@ -157,8 +160,9 @@ export class TutorialComponent implements OnInit {
    */
   displayNextQuestion() {
     //The question counter is updated
+    this.totalPossiblePoints += this.currQuestion.valor;
     this.questionCounter += 1;
-
+    
     //Checks if there are questions left in the questions array
     if (this.questionCounter < this.questions.length) {
 

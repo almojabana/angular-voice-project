@@ -3,9 +3,6 @@ import { Language } from '../shared/models/language';
 import { LanguagesMenuService } from '../shared/services/languages-menu.service';
 import { VoiceNavigationService} from '../shared/services/voice-navigation.service'; 
 import { SpeechResults } from '../shared/models/speech-results';
-import  { LANGUAGES } from '../mock-languages';
-import { Observable } from 'rxjs';
-import { ActivatedRoute, ExtraOptions, Router } from '@angular/router';
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
 
 @Component({
