@@ -1,29 +1,44 @@
-.navbar {
-    justify-content: space-between;
-}
-
-.navbar li {
-    list-style-type: none;
-    float: left;
-}
-
-.navbar li a {
-    display:block;
-    padding-left: 1rem;
-    color: white;
-    text-decoration: none; 
-}
-
-span {
-    float:center;
-}
-
-.active {
-    text-decoration: underline;
-    float: center;
+.bs-popover-left .arrow, .bs-popover-right .arrow {
+    margin-top: -5px;
+  }
+  div{
+      font-size: large;
+  }
+  h1 {
+      justify-content: center;
+  }
+  
+  textarea {
+      resize: none;
+      display:block;
+  }
+  
+  label {
+      display:block;
+  }
+  
+  .navbar {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+    }
     
-}
-
-a:hover {
-    text-decoration: underline;
-}
+    .navbar li {
+      float: left;
+    }
+    
+    .navbar li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    
+    .navbar li a:hover {
+      background-color: #111;
+    }
+  
+  

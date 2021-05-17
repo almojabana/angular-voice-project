@@ -22,7 +22,16 @@ export class VoiceNavigationService {
         break;  
     }
   }
-
+  
+  skipLinkNavigator(link:string):void {
+    this.router.navigate([link]);
+  }
+  /**
+   * This method is used for navigating to the languages 
+   * menu. The link parameter is a string type that represents
+   * the name of the tutorial.
+   * @param link 
+   */
   languagesMenuNavigator(link: string): void {
     switch (link) {
       case 'the c tutorial':
@@ -104,7 +113,6 @@ export class VoiceNavigationService {
         var str: string = tutorial.tutorialId.toString();
         this.router.navigate(['/tutorial-questions/'+ str]);
         break;
-
     }
   }
 }

@@ -1,24 +1,37 @@
 <header>
-    <a [href]="skipLink">Skip to the main content</a>
-    <div class="container" fxLayout="row"> 
-        <mat-toolbar color="primary" class="navbar">
-            <div id="app-name"></div>
-            <div>
-                <ul>
-                    <span><li><a routerLink='/languages-menu'>Languages Menu</a></li></span>
-                    <span><li><a>User Profile</a></li></span>
-                </ul>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div><a [href]="skipLink">Skip to the main content</a></div>
             </div>
-        </mat-toolbar>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="app-name">Code with your voice!</div>
+                <div>
+                    <ul class="navbar">
+                        <span>
+                            <li><a routerLink='/languages-menu'>Languages Menu HOME</a></li>
+                        </span>
+                    </ul>
+                </div>
+            </div>  
+        </div>
     </div>
 </header>
 
-<main id="main-content">
-    <h1 *ngIf="language">{{language.name}} Tutorials</h1>
-    <ul>
-        <li *ngFor="let tutorial of tutorials">
-        <a routerLink="/tutorial-questions/{{tutorial.tutorialId}}">{{tutorial.secuencia}}. {{tutorial.titulo}}</a>
-        </li>
-    </ul> 
+<main>
+    <div class="container" id="main-content">
+        <div class="row">
+            <div class="column">
+                <h1 *ngIf="language">{{language.name}} Tutorials</h1>
+                <ul>
+                    <li *ngFor="let tutorial of tutorials">
+                    <a routerLink="/tutorial-questions/{{tutorial.tutorialId}}">{{tutorial.secuencia}}. {{tutorial.titulo}}</a>
+                </li>
+                </ul> 
+            </div>
+        </div>
+    </div>
 </main>
- 
+  

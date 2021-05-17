@@ -1,4 +1,6 @@
-
+.bs-popover-left .arrow, .bs-popover-right .arrow {
+  margin-top: -5px;
+}
 div{
     font-size: large;
 }

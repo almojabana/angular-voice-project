@@ -27,7 +27,7 @@ export class SpeechRecognitionService {
   //Defines three main contexts for the application: 
   //writing, deleting, and navigating
   navigateCommands : string[] = ['navigate to', 'go to', 'press']; 
-  writeCommands: string [] = ['write ', 'insert ', 'declare', 'answer', 'right', 'great', 'mike'];
+  writeCommands: string [] = ['write ', 'insert ', 'declare', 'initialize', 'answer', 'right', 'great', 'mike', 'rite aid', 'bright', 'wrecked'];
   deleteCommands: string[] = [ 'delete', 'erase', 'remove'];  
   
 

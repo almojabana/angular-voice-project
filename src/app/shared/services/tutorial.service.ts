@@ -45,11 +45,10 @@ export class TutorialService {
     return  this.http.get<TutorialUsuarioDTO>(`${this.userTutorialUrl}${userID}/${tutorialID}`);
   }
 
-  /*Publishes a new user tutorial record, stored as a TutorialUsuarioDTO.
-  * Parameters: a dto with the userID and tutorialID.
-  */
+  
   /**
-   * 
+   * Publishes a new user tutorial record, stored as a TutorialUsuarioDTO.
+   * Parameters: a dto with the userID and tutorialID.
    * @param dto 
    * @returns 
    */
