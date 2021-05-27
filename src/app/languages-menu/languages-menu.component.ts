@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, setTestabilityGetter, ViewChild } from '@angular/core';
-import { Language } from '../shared/models/language'; 
+import { Language } from '../shared/models/language2'; 
 import { LanguagesMenuService } from '../shared/services/languages-menu.service';
 import { VoiceNavigationService} from '../shared/services/voice-navigation.service'; 
 import { SpeechResults } from '../shared/models/speech-results';

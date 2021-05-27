@@ -197,6 +197,7 @@ export class CSharpRulesService {
     }
 
     //Voice commands for writing arithmetic operators
+    //plus sign commands
     else if (tempPredicate.match(/\s?plus sign/i)) {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = tempPredicate.replace(/\s?plus sign/i, "+");
@@ -209,6 +210,7 @@ export class CSharpRulesService {
       tempPredicate = tempPredicate.replace(/plus/i, "+");
     }
 
+    //minus sign commands
     else if (tempPredicate.match(/\s?minus sign/i)) {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = this.preCasingForExpressions(tempPredicate, "minus");
@@ -220,6 +222,8 @@ export class CSharpRulesService {
       tempPredicate = this.preCasingForExpressions(tempPredicate, "minus");
       tempPredicate = tempPredicate.replace(/minus/i, " - ");
     }
+
+    //division sign commands
     else if (tempPredicate.match(/division sign/i)) {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = tempPredicate.replace(/division sign/i, "/");
@@ -234,6 +238,8 @@ export class CSharpRulesService {
       tempPredicate = this.preCasingForExpressions(tempPredicate, "times");
       tempPredicate = tempPredicate.replace(/times/i, "*");
     }
+
+    //increment  and decrement
     else if (tempPredicate.match(/increment/i)) {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = tempPredicate.replace(/increment/i, "++");
@@ -242,6 +248,8 @@ export class CSharpRulesService {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = tempPredicate.replace(/decrement/i, "--");
     }
+
+    //percent and mod
     else if (tempPredicate.match(/\s?percent sign/i)) {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = this.preCasingForExpressions(tempPredicate, " mod ");
@@ -301,7 +309,7 @@ export class CSharpRulesService {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = tempPredicate.replace(/open curly bracket[s]?/i, "{");
     }
-    else if (tempPredicate.match(/close curly bracket[s]?/i)) {
+    else if (tempPredicate.match(/closed? curly bracket[s]?/i)) {
       tempPredicate = this.replaceHassleWords2(tempPredicate);
       tempPredicate = tempPredicate.replace(/close curly bracket[s]?/i, "}");
     }
@@ -342,6 +350,7 @@ export class CSharpRulesService {
       tempPredicate = this.upperCasing(tempPredicate);
     }
 
+    //FINISHING FUNCTIONS 
     //Checks for if and while conditions MUST STAY AT THE END
     tempPredicate = this.checkIfTestCondition(tempPredicate);
     //Checks for the Console.WriteLine command
@@ -534,7 +543,7 @@ export class CSharpRulesService {
       }
       var n: number = parseInt(numberString)-1; 
       if(predicate.match(/decrement/)){
-        predicate = "for(int i="+ n +"; i=>0" +"; i--)";
+        predicate = "for(int i="+ n +"; i>=0" +"; i--)";
       } 
       //if(predicate.match(/increment/)){
       else{
@@ -544,12 +553,7 @@ export class CSharpRulesService {
     return predicate; 
   }
   
-
-  /**
-   * This function 
-   * @param predicate a string value to  
-   * @returns 
-   */
+ //Main filter for stop words and voice recognition errors
   replaceHassleWords(predicate: string): string {
     //Forced troubleshooting recongition for the word  "false" 
     if (predicate.match("faults")) {
@@ -698,10 +702,14 @@ export class CSharpRulesService {
     if (predicate.match(/ with/)) {
       predicate = predicate.replace(/ with/i, " width ");
     }
+    if (predicate.match(/clothes /)) {
+      predicate = predicate.replace(/clothes /i, " close ");
+    }
 
     return predicate;
   }
 
+  //Second filter
   replaceHassleWords2(predicate: string): string {
     //Removing the words "an", "a", and "the" from the beginning of 
     if (predicate.startsWith("an ")) {

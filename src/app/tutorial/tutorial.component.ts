@@ -14,7 +14,8 @@ import { VoiceNavigationService } from '../shared/services/voice-navigation.serv
 import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Lenguaje} from '../shared/models/language';
-
+/**Tutorial Component--The tutorial component manages the tutorial's dynamic
+ */
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
@@ -109,7 +110,8 @@ export class TutorialComponent implements OnInit {
           this.userTutorial = userTutorial;
           if (this.userTutorial) {
             var userTutorialID = this.userTutorial.tutorialUsuarioId;
-            this.getQuestionsRemaining(tutorialID, userTutorialID.toString());
+            this.getQuestions(this.tutorialID);
+            //this.getQuestionsRemaining(tutorialID, userTutorialID.toString());
           }
           //If no incomplete user tutorial record exists, a new one is create
           if (!this.userTutorial) {
@@ -148,6 +150,7 @@ export class TutorialComponent implements OnInit {
       console.log(this.currQuestion);
     });
   }
+
   getQuestionsRemaining(tutorialID: string, userTutorialID: string) {
     this.tutorialService
       .getQuestionsRemaining(tutorialID, userTutorialID)
@@ -176,8 +179,9 @@ export class TutorialComponent implements OnInit {
    */
   gradeAnswer(userAnswer: string) {
     // The answer, current question id, and user tutorial id are used to create a DTO
+    debugger;
     var dto: PostRespuestaUsuarioDTO = {
-      respuesta: userAnswer.replace(/\s+/g, ''),
+      respuesta: userAnswer.replace(/\s+/g, '').trim(),
       preguntaId: this.currQuestion.preguntaId,
       tutorialUsuarioId: this.userTutorial.tutorialUsuarioId
     };
@@ -234,10 +238,11 @@ export class TutorialComponent implements OnInit {
     }
   }
 
+  //Sets the title for the component view
   setTitle(title: string) {
     this.titleService.setTitle(title);
   }
-
+  //Captures the voice object emitted by the Voice Recognition Service
   captureVoiceCommand(speechResult: SpeechResults): void {
     let predicate = speechResult.predicate.trim();
 
@@ -252,7 +257,7 @@ export class TutorialComponent implements OnInit {
       }
       else { this.userAnswer += ' ' + voiceCodeResult; }
     }
-
+    //Manages Deleting Functions
     else if (speechResult.action === 'delete'
       && predicate.match(/.*word[s]?/i)) {
       let iterations: number = 0;
@@ -276,20 +281,23 @@ export class TutorialComponent implements OnInit {
       else { this.userAnswer = ''; }
     }
 
-    //simple "undo"
+    //Manages a simple "undo" fuctionality
     else if (speechResult.action === 'delete'
       && predicate.match(/that/i)) {
         this.userAnswer = this.oldAnswer;
       }
-
+    //Deletes the user answer
     else if (speechResult.action === 'delete'
       && predicate === 'everything') {
       this.userAnswer = "";
     }
-
+    //Delegates navigation functionality for the component
     else if (speechResult.action === 'navigate') {
 
       if (predicate.match(/.*next.*/i)) {
+        this.displayNextQuestion();
+      }
+      if (predicate.match(/.*skip question.*/i)) {
         this.displayNextQuestion();
       }
       else if (predicate.match(/.*check.*answer.*/i)) {
@@ -305,6 +313,7 @@ export class TutorialComponent implements OnInit {
     else { console.log("Tutorial Component: The voice command was not recognized"); }
   }
 
+  //Filter for stop words
   removeHassleWords(predicate: string): string {
     //Removing the words "an", "a", and "the" from the beginning of 
     if (predicate.startsWith("an ")) {
@@ -399,7 +408,7 @@ export class TutorialComponent implements OnInit {
     }
     else return predicate;
   }
-
+  //Closes subscriptions
   ngOnDestroy() {
     this.voiceSubscription.unsubscribe()
   }
