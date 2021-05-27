@@ -165,8 +165,11 @@ export class CSharpRulesService {
       tempPredicate = tempPredicate.replace(/an equal sign/i, "=");
     }
 
-    else if (tempPredicate.match(/.* +? (?:plus )?equals?.*/i)) {
+    else if (tempPredicate.match(/plus equals?/i)) {
       tempPredicate = tempPredicate.replace(/plus equals?/i, "+=");
+    }
+    else if (tempPredicate.match(/.* \+.* equals?.*/i)) {
+      tempPredicate = tempPredicate.replace(/ \+.* equals?/i, "+=");
     }
 
     else if (tempPredicate.match(/\s?equals/i)) {
@@ -502,7 +505,6 @@ export class CSharpRulesService {
   }
   
   checkIfTestCondition(predicate: string) : string {
-    debugger;
     var wordList = [/while /i, /if /i];
 
     wordList.forEach(word => {
