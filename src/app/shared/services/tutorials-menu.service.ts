@@ -14,7 +14,7 @@ import { Language } from '../models/language';
 })
 export class TutorialsMenuService {
   baseUrl = 'https://localhost:44375';
-  private tutorialUrl = this.baseUrl+'/api/Tutorials/'
+  private tutorialUrl = this.baseUrl+'/api/Tutorials/';
 
   constructor(private http: HttpClient) { }
  

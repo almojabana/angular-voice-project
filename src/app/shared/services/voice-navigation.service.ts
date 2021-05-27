@@ -36,6 +36,7 @@ export class VoiceNavigationService {
     switch (link) {
       case 'the c tutorial':
       case 'the c tutorials':
+      case 'C': 
         this.router.navigate(['/language-tutorials/1']); 
         break;
       case 'the java tutorial': 
@@ -46,6 +47,7 @@ export class VoiceNavigationService {
       case 'the c sharp tutorials':
       case 'c sharp tutorials':
       case 'c sharp tutorial':
+      case('C#'):
         this.router.navigate(['/language-tutorials/11']);
         break;
     }

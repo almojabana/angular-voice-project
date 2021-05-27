@@ -1,23 +1,36 @@
-<header>
-    <a href="/languages-menu#main-content">Skip to the languages menu</a>
-    <div class="container" fxLayout="row"> 
-        <mat-toolbar color="primary" class="navbar">
-            <div id="app-name"></div>
-            <div id="links">
-                <ul>
-                    <span><li><a class="active" routerLink='/languages-menu'>Languages Menu</a></li></span>
-                    <span><li><a>User Profile</a></li></span>
-                </ul>
-            </div>
-        </mat-toolbar>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <a id="skipToMain1" #skipToMain1 [href]="mainContentSkipLink">Skip to the main content</a>
+        </div> 
     </div>
-</header>
+</div>
+<div class="container-fluid">
+    <nav class="navbar-nav navbar-expand-lg navbar-dark" style="background-color: #563d7c;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink='/languages-menu'>Languages</a>
+                </li>
+            </ul>
+        </div>   
+    </nav>
+</div>
 
-<main id="main-content">
-    <h1 tabindex="-1"> Languages Menu</h1>
-    <ul>
-        <li *ngFor = "let language of languages"><a routerLink = "/language-tutorials/{{language.id}}">{{language.name}}</a></li>
-    </ul> 
+<main id="main-content1">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h1>Languages</h1>
+                <ul>
+                <li *ngFor = "let language of languages"><a routerLink = "/language-tutorials/{{language.id}}">{{language.name}}</a></li>
+                </ul> 
+            </div>
+        </div>
+    </div>  
 </main>
 
 

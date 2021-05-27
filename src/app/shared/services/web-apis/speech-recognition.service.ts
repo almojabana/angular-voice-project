@@ -4,7 +4,7 @@
  * and capturing the user's voice transcript.
  */
 import { Injectable, NgZone } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { SpeechResults } from '../../models/speech-results';
 
 //Force Angular to recognize webkitSpeechRecogntion 
@@ -22,14 +22,14 @@ export class SpeechRecognitionService {
   grammar = '#JSGF V1.0;grammar keywords; public <keyword> = write | false | true;';
   speechRecognitionList = new webkitSpeechGrammarList();
   isListening = false;
-  statement:  Subject<SpeechResults> = new Subject<SpeechResults>();
+  statement: Subject<SpeechResults> = new Subject<SpeechResults>();
 
   //Defines three main contexts for the application: 
   //writing, deleting, and navigating
-  navigateCommands : string[] = ['navigate to', 'go to', 'press']; 
-  writeCommands: string [] = ['write ', 'insert ', 'declare', 'initialize', 'answer', 'right', 'great', 'mike', 'rite aid', 'bright', 'wrecked'];
-  deleteCommands: string[] = [ 'delete', 'erase', 'remove'];  
-  
+  navigateCommands: string[] = ['navigate to', 'go to', 'press'];
+  writeCommands: string[] = ['write ', 'insert ', 'declare', 'initialize', 'answer', 'right', 'great', 'mike', 'rite aid', 'bright', 'wrecked'];
+  deleteCommands: string[] = ['delete', 'erase', 'remove', 'undo'];
+
 
   constructor(private ngZone: NgZone) { }
   /**
@@ -40,7 +40,10 @@ export class SpeechRecognitionService {
     this.recognition.grammars = this.speechRecognitionList;
     this.recognition.lang = 'en-US';
     this.recognition.continuous = true;
-    this.recognition.interimResults = true;
+    this.recognition.interimResults = false;
+
+    this.onResult().subscribe(this.statement);
+    this.onEnd().subscribe();
     //this.recognition.maxAlternatives = 2; 
     console.log("Speech recognition initialized");
   }
@@ -48,17 +51,22 @@ export class SpeechRecognitionService {
    * Starts the speech recognition service to listen to the user.
    */
   start(): void {
-    if (this.isListening){
-      console.log("Speech recognition has been activated.", 
-      this.isListening)
-     // this.stop();
+    if (this.isListening) {
+      console.log("Speech recognition has been activated.",
+        this.isListening)
+      // this.stop();
     }
     else {
-    this.isListening = true;
-    this.recognition.start();
-    //subscribes to the onResult() function to continually listen 
-    //for speech recognition results
-    this.onResult().subscribe(this.statement); }
+      this.isListening = true;
+      this.recognition.start();
+      //subscribes to the onResult() function to continually listen 
+      //for speech recognition results
+      // this.onResult().subscribe(this.statement);
+      // this.onEnd().subscribe();//.subscribe();// => {
+      //   console.log("This isListing  ", this.isListening = e);
+      // });
+      console.log(this.recognition);
+    }
   }
 
   /**
@@ -83,12 +91,35 @@ export class SpeechRecognitionService {
           if (event.results[i].isFinal) {
             finalString += event.results[i][0].transcript;
             this.ngZone.run(() => observer.next(
-              this.captureSpeechResult(finalString.toLowerCase())));   
+              this.captureSpeechResult(finalString.toLowerCase())));
           }
         }
       }
     });
   }
+
+  onEnd(): Observable<boolean> {
+    return new Observable(observer => {
+      this.recognition.onend = () => {
+        console.log("Service ended.");
+        // observer.next(false);
+        if(this.isListening == true){
+          console.log("SPEECH RECOGNITION AUTO SHUT DOWN! Restarting...");
+          this.isListening = false;
+          this.start();
+        }
+      }
+    });
+  }
+
+  // onStart(): Observable<boolean> {
+  //   return new Observable(observer => {
+  //     this.recognition.onstart = () => {
+  //       this.isListening = true;
+  //       window.alert("Speech Recognition Started")
+  //     }
+  //   });
+  // }
 
   /**
    * Captures the voice command and divides it into a main context 
@@ -96,34 +127,34 @@ export class SpeechRecognitionService {
    * @param finalString 
    * @returns a SpeechResult 
    */
-  captureSpeechResult(finalString:string): SpeechResults {
+  captureSpeechResult(finalString: string): SpeechResults {
     let action = "no action";
-    let predicate ="no predicate"; 
+    let predicate = "no predicate";
     let words = finalString.trim();
 
     console.log("finalstring from service: ", finalString)
     this.navigateCommands.forEach(element => {
-      if(words.startsWith(element)){
+      if (words.startsWith(element)) {
         action = "navigate";
         predicate = finalString.split(element)[1].trim();
-        }
+      }
     });
 
     this.writeCommands.forEach(element => {
-      if(words.startsWith(element)){
+      if (words.startsWith(element)) {
         action = "write";
         predicate = finalString.split(element)[1].trim();
-        }
+      }
     });
 
     this.deleteCommands.forEach(element => {
-      if(words.startsWith(element)){
+      if (words.startsWith(element)) {
         action = "delete";
         predicate = finalString.split(element)[1].trim();
-        }
+      }
     });
 
-    return {action, predicate}; 
+    return { action, predicate };
 
   }
 

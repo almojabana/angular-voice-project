@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, setTestabilityGetter, ViewChild } from '@angular/core';
 import { Language } from '../shared/models/language'; 
 import { LanguagesMenuService } from '../shared/services/languages-menu.service';
 import { VoiceNavigationService} from '../shared/services/voice-navigation.service'; 
 import { SpeechResults } from '../shared/models/speech-results';
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-languages-menu',
@@ -14,19 +17,29 @@ export class LanguagesMenuComponent implements OnInit {
   languages: Language[]; 
   userAction: string;
   userPredicate: string;
+  mainContentSkipLink: string; 
+  @ViewChild('skipToMain1') skipToMain1: ElementRef;
+  voiceSubscription: Subscription
 
   constructor( 
     private languagesMenuService : LanguagesMenuService,
     private speechRecognition: SpeechRecognitionService,
-    private navigationService: VoiceNavigationService
-    ) { }
+    private navigationService: VoiceNavigationService,
+    private titleService: Title, 
+    private route: ActivatedRoute
+    ) { } 
 
   ngOnInit(): void {
     this.getLanguages();
-    this.speechRecognition.statement.subscribe( e =>  { 
+    this.voiceSubscription = this.speechRecognition.statement.subscribe( e =>  { 
       console.log("statement subscription from speech service " , e);
-       this.captureResult(e);   
+       this.captureResult(e); 
     });
+    this.mainContentSkipLink =
+      this.route.snapshot.url
+        .toString()
+        .replace(",", "/") + "#main-content1";
+    this.setTitle("Languages")
   }
 
   captureResult(results:SpeechResults): void  { 
@@ -37,7 +50,10 @@ export class LanguagesMenuComponent implements OnInit {
     console.log("predicate: ", this.userPredicate)
 
     if (this.userAction === 'navigate') {
-      this.navigationService.languagesMenuNavigator(this.userPredicate); 
+      if (this.userPredicate.match(/.*main content/i)) {
+        this.skipToMain1.nativeElement.click();
+      }
+      else this.navigationService.languagesMenuNavigator(this.userPredicate);
     }
   }
  
@@ -46,5 +62,13 @@ export class LanguagesMenuComponent implements OnInit {
     this.languagesMenuService.getLanguages().subscribe(languages =>this.languages = languages)); 
     this.languages.sort((a,b) => a.name > b.name ? 1 : -1); 
   } 
+
+  setTitle(title:string){
+    this.titleService.setTitle(title); 
+  }
+
+  ngOnDestroy() {
+    this.voiceSubscription.unsubscribe()
+}
 
 }

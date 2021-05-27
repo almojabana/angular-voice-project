@@ -11,8 +11,7 @@ import { PostRespuestaUsuarioDTO } from '../models/post-respuesta-usuario-dto';
 import { Pregunta } from '../models/pregunta';
 import { ResultadoDTO } from '../models/resultado-dto';
 import { Tutorial } from '../models/tutorial';
-import { TutorialNotes} from '../models/tutorial-notes';
-import { catchError, tap } from 'rxjs/operators';
+import { Lenguaje } from '../models/language';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +25,12 @@ export class TutorialService {
     
   //address for the API Controllers
   private userTutorialUrl = this.baseUrl+'/api/TutorialUsuarios/';
-  private getTutorialQuestionsUrl = this.baseUrl +'/api/Preguntas/getQuestionsByTutorial/'; 
+  private getQuestionsUrl = this.baseUrl +'/api/Preguntas/getQuestionsByTutorial/';
+  private getQuestionsRemainingUrl = this.baseUrl+'/api/Preguntas/getQuestionsRemaining/'
   private postAnswerUrl = this.baseUrl +'/api/RespuestaUsuarios';
   private getTutorialUrl = this.baseUrl + '/api/Tutorials/Tutorial/';
-  private tutorialNotesUrl = 'src/app/tutorial-notes';
+  private getLanguageUrl = this.baseUrl + '/api/Lenguajes/';
+ // private tutorialNotesUrl = 'src/app/tutorial-notes';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -45,7 +46,6 @@ export class TutorialService {
     return  this.http.get<TutorialUsuarioDTO>(`${this.userTutorialUrl}${userID}/${tutorialID}`);
   }
 
-  
   /**
    * Publishes a new user tutorial record, stored as a TutorialUsuarioDTO.
    * Parameters: a dto with the userID and tutorialID.
@@ -64,43 +64,33 @@ export class TutorialService {
    * @param tutorialID 
    * @returns 
    */
-  getQuestions(tutorialID: string): Observable<Array<Pregunta[]>>{
-    return this.http.get<Array<Pregunta[]>>(`${this.getTutorialQuestionsUrl}${tutorialID}`); 
+  getQuestions
+  (tutorialID: string): Observable<Array<Pregunta[]>>{
+    return this.http
+    .get<Array<Pregunta[]>>(`${this.getQuestionsUrl}${tutorialID}`); 
+  }
+
+  getQuestionsRemaining
+  (tutorialID:string, userTutorialID:string):Observable<Array<Pregunta[]>>{
+    return this.http
+    .get<Array<Pregunta[]>>(`${this.getQuestionsRemainingUrl}${tutorialID}/${userTutorialID}`); 
   }
 
   getTutorial(tutorialID: string): Observable<Tutorial> {
     return this.http.get<Tutorial>(`${this.getTutorialUrl}${tutorialID}`); 
   }
 
-  /*Posts the user's answer to the API. The grading is perfomed in the API.
-  *This method publishes an data transfer object for the result.
-  */
-  /**
-   * 
-   * @param dto 
-   * @returns 
-   */
   gradeAnswer(dto: PostRespuestaUsuarioDTO): Observable<ResultadoDTO>{
     return this.http.post<ResultadoDTO>(`${this.postAnswerUrl}`, dto);
   }
 
-  /**
-   * 
-   * @param userTutorialId 
-   * @param dto 
-   * @returns 
-   */
   updateUserTutorial(userTutorialId: number, dto: TutorialUsuarioDTO): Observable<void> {
     return this.http.put<void>(`${this.userTutorialUrl}${userTutorialId}`, dto); 
   }
-
-  getNotes(id: number): Observable<TutorialNotes> {
-    debugger;
-    const url = `${this.tutorialNotesUrl}/${id}`;
-    return this.http.get<TutorialNotes>(url).pipe(
-      tap(_ => console.log(`fetched notes id=${id}`)),
-      catchError(this.handleError<TutorialNotes>(`getNotes id=${id}`))
-    );
+  
+  getLanguage(languageID: string): Observable<Lenguaje> {
+    return this.http.get<Lenguaje>(`${this.getLanguageUrl}${languageID}`);
+    
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

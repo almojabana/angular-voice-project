@@ -1,33 +1,41 @@
-<header>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div><a id="skipLink" #skipLink [href]="mainContentSkipLink">Skip to the main content</a></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div id="app-name">Code with your voice!</div>
-                <div>
-                    <ul class="navbar"  *ngIf="returnRoute">
-                        <li><a routerLink='/languages-menu'>Languages Menu HOME</a></li>
-                    </ul>
-                </div>
-            </div>  
-        </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <a id="skipToMain3" #skipToMain3 [href]="mainContentSkipLink3">Skip to the main content</a>
+        </div> 
     </div>
-</header>
+</div>
+<div class="container-fluid">
+    <nav class="navbar-nav navbar-expand-lg navbar-dark" style="background-color: #563d7c;">
+        <div style="padding-left: 1em;">
+            <span class="navbar-brand mb-0 h1">Voice Coding App</span>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"*ngIf ="returnRoute" >
+                    <a class="nav-link" routerLink='{{returnRoute}}'>Tutorials</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink='/languages-menu'>Languages</a>
+                </li>
+            </ul>
+        </div>   
+    </nav>
+</div>
 
-<main id="main-content">
+<main id="main-content3">
     <div class="container-fluid">
         <div class="row align-content-center">
             <div class="col-12">
                 <h1 *ngIf="tutorial">Tutorial {{tutorial.secuencia}}: {{tutorial.titulo}}</h1>
                 <br>
                 <a routerLink='{{returnRoute}}'>Click here to return to C# tutorials</a>
-                <br> 
+                <br>
             </div>
-        </div> 
+        </div>
     </div>
 
     <div class="container-fluid" *ngIf="!isFinished">
@@ -37,6 +45,7 @@
                 <div id="notes" *ngIf="tutorial" [innerHTML]="tutorial.explicacion"></div>
             </div>
         </div>
+        <hr>
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="row justify-content-start">
@@ -48,10 +57,10 @@
             </div>
             <div class="col-md-4">
                 <div class="row justify-content-start gy-5">
-                    <div class="col-md-6">
-                    <label for="user-input">Your Answer</label>
-                    <textarea class="form-control" id="user-input" placeholder="Write your answer here" rows="10" cols="33"
-                        [(ngModel)]="userAnswer"></textarea>
+                    <div class="col-md-12">
+                        <label for="user-input">Your Answer</label>
+                        <textarea class="form-control" id="user-input" placeholder="Write your answer here" rows="10"
+                            cols="33" [(ngModel)]="userAnswer"></textarea>
                     </div>
                 </div>
                 <div class="row justify-content-start gy-5">
@@ -66,7 +75,7 @@
                             <div><button class="btn btn-success" (click)="displayNextQuestion()">Next</button></div>
                         </div>
                         <div class="pt-2" *ngIf="currResult==0">
-                            
+
                             <div><button class="btn btn-success" (click)="displayNextQuestion()">Next</button></div>
                         </div>
                     </div>
@@ -74,15 +83,15 @@
                         <div class="pt-2" *ngIf="currResult<0">
                             <button class="btn btn-secondary" (click)="displayNextQuestion()">Skip Question</button>
                         </div>
-                    </div>          
-                </div> 
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col">
                         <div class="alert alert-danger" *ngIf="currResult==0">
                             Incorrect
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
 
@@ -99,7 +108,7 @@
                 <h2>Final Results</h2>
                 <p>Congratulations, you have passed the tutorial! Your final score is: {{finalScore}}</p>
             </div>
-            
+
         </div>
         <div class="row justify-content-center" *ngIf="!passedTutorial">
             <div class="col-md-12">
@@ -107,9 +116,9 @@
                     <h2><strong>Final Results</strong></h2>
                     <p>Don't give up! Final score: <strong>{{finalScore}}</strong></p>
                 </div>
-                
+
                 <a routerLink="/language-tutorials/{{tutorial.lenguajeIdFk1}}">Return to C# tutorials</a>
-            </div> 
+            </div>
         </div>
     </div>
 </main>
