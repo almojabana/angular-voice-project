@@ -1,4 +1,4 @@
-import {Language} from './shared/models/language';
+import {Language} from './shared/models/language2';
 
 export const LANGUAGES:Language[] =  [
     {id: 1, name: 'C'}, 
