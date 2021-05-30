@@ -59,12 +59,6 @@ export class SpeechRecognitionService {
     else {
       this.isListening = true;
       this.recognition.start();
-      //subscribes to the onResult() function to continually listen 
-      //for speech recognition results
-      // this.onResult().subscribe(this.statement);
-      // this.onEnd().subscribe();//.subscribe();// => {
-      //   console.log("This isListing  ", this.isListening = e);
-      // });
       console.log(this.recognition);
     }
   }
@@ -97,7 +91,7 @@ export class SpeechRecognitionService {
       }
     });
   }
-
+//Event handler for looping the voice service when it shuts down due to timeout
   onEnd(): Observable<boolean> {
     return new Observable(observer => {
       this.recognition.onend = () => {
@@ -111,15 +105,6 @@ export class SpeechRecognitionService {
       }
     });
   }
-
-  // onStart(): Observable<boolean> {
-  //   return new Observable(observer => {
-  //     this.recognition.onstart = () => {
-  //       this.isListening = true;
-  //       window.alert("Speech Recognition Started")
-  //     }
-  //   });
-  // }
 
   /**
    * Captures the voice command and divides it into a main context 

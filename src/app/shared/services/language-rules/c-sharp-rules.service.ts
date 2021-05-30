@@ -1,4 +1,6 @@
+// CSharpRulesService Class : contains voice command patterns for the C# Language
 import { Injectable } from '@angular/core';
+
 
 @Injectable({
   providedIn: 'root'
@@ -359,6 +361,7 @@ export class CSharpRulesService {
     return tempPredicate;
   }
 
+  //Manages voice commands for Console.WriteLine()
   checkDisplayOutput(tempPredicate: string): string{
     if(tempPredicate.match(/console.*write.*line.*/)){
       tempPredicate = tempPredicate.replace(/console.*write.*line /, ""); 
@@ -371,10 +374,12 @@ export class CSharpRulesService {
     return tempPredicate
   }
 
+  //writes out the const keyword
   writeConstant(predicate: string): string {
     return predicate = predicate.replace("constant", "const");
   }
 
+  //matches a type for variable declarations
   matchType(predicate: string): string {
     if (predicate.match(/double/i))
       predicate = this.doubleType(predicate);
@@ -396,6 +401,7 @@ export class CSharpRulesService {
     }
   }
 
+  //manages commands for double types
   doubleType(predicate: string): string {
     if (predicate.match("double type")) {
       return predicate = predicate.replace("double type", "double");
@@ -403,6 +409,7 @@ export class CSharpRulesService {
     return predicate;
   }
 
+  //manages commands for a boolean type
   boolType(predicate: string): string {
     if (predicate.match("boolean type")) {
       return predicate = predicate.replace("boolean type", "bool");
@@ -479,7 +486,7 @@ export class CSharpRulesService {
     return predicate = predicate.replace(/pascal case .*/i, ' ' + variableName.trim());
   }
 
-
+  //This method returns an uppercase string
   upperCasing(predicate: string): string {
     let variableName = '';
     //The space after uppercase is needed! Do not remove it.
@@ -492,6 +499,7 @@ export class CSharpRulesService {
     return predicate = predicate.replace(/uppercase.*/i, ' ' + variableName.trim());
   }
 
+  //This method returns a camel-cased string
   camelCasing(tempPredicate: string) {
     let variableName = '';
     tempPredicate = tempPredicate.trim();
@@ -513,6 +521,7 @@ export class CSharpRulesService {
     return tempPredicate = tempPredicate.replace(/camelcase .*/i, ' ' + variableName.trim());
   }
   
+  //This function manages user transcripts(predicates) with an if or while command
   checkIfTestCondition(predicate: string) : string {
     var wordList = [/while /i, /if /i];
 
@@ -532,7 +541,7 @@ export class CSharpRulesService {
     });
     return predicate;
   }
-
+//This method manages voice transcripts(predicates) with the for loop command
   checkIfForLoop(predicate: string): string {
     var numberString:string = '0';
     if(predicate.match(/(?:a )?for loop that repeats [0-9]+/i)){
@@ -709,7 +718,7 @@ export class CSharpRulesService {
     return predicate;
   }
 
-  //Second filter
+  //Second filter for strings
   replaceHassleWords2(predicate: string): string {
     //Removing the words "an", "a", and "the" from the beginning of 
     if (predicate.startsWith("an ")) {

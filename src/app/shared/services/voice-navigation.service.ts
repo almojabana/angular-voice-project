@@ -1,3 +1,7 @@
+/**Voice Navigation Service
+ * voice-navigation.service.ts
+ * This class manages voice navigation for each component. 
+ */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router'; 
 import { Tutorial } from '../models/tutorial';
@@ -11,7 +15,8 @@ export class VoiceNavigationService {
   constructor(
   private router: Router
   ) { } 
-
+//Navigation to links that are common to all components
+//Calls the Angular router after choosing a url
   generalNavigator(link:string) : void {
     switch (link) {
       case 'the languages menu':
@@ -22,12 +27,12 @@ export class VoiceNavigationService {
         break;  
     }
   }
-  
+  //Recieves the skiplink url and sends it to Angular's routing service
   skipLinkNavigator(link:string):void {
     this.router.navigate([link]);
   }
   /**
-   * This method is used for navigating to the languages 
+   * This method is used for navigating inside the languages menu component
    * menu. The link parameter is a string type that represents
    * the name of the tutorial.
    * @param link 
@@ -53,8 +58,10 @@ export class VoiceNavigationService {
     }
   }
 
-  tutorialsMenuNavigator(link: string, tutorials: Tutorial[][]): void {
-    switch (link) {
+ //This method is responsible for navigation within the tutorials menu
+ //The tutorialNum is a string that represents the tutorial number for any given language
+  tutorialsMenuNavigator(tutorialNum: string, tutorials: Tutorial[][]): void {
+    switch (tutorialNum) {
       case 'tutorial number one':
       case 'tutorial number 1':
         var tutorial: Tutorial = new Tutorial().deserialize(tutorials[0]);

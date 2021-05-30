@@ -59,35 +59,34 @@ export class TutorialService {
   /*This method publishes an observable array of questions for the current tutorial.
   *Parameters: the tutorial ID as a string. The string is used to create the URL for the API's get mehtod.
   */
-  /**
-   * 
-   * @param tutorialID 
-   * @returns 
-   */
   getQuestions
   (tutorialID: string): Observable<Array<Pregunta[]>>{
     return this.http
     .get<Array<Pregunta[]>>(`${this.getQuestionsUrl}${tutorialID}`); 
   }
 
+ //This method gets the remaining questions *currently degugging*
   getQuestionsRemaining
   (tutorialID:string, userTutorialID:string):Observable<Array<Pregunta[]>>{
     return this.http
     .get<Array<Pregunta[]>>(`${this.getQuestionsRemainingUrl}${tutorialID}/${userTutorialID}`); 
   }
 
+//Gets the current tutorial 
   getTutorial(tutorialID: string): Observable<Tutorial> {
     return this.http.get<Tutorial>(`${this.getTutorialUrl}${tutorialID}`); 
   }
-
+//Sends the user's answer to the back end for grading
   gradeAnswer(dto: PostRespuestaUsuarioDTO): Observable<ResultadoDTO>{
     return this.http.post<ResultadoDTO>(`${this.postAnswerUrl}`, dto);
   }
 
+  // Updates the user-tutorial record when the user finishes a tutorial
   updateUserTutorial(userTutorialId: number, dto: TutorialUsuarioDTO): Observable<void> {
     return this.http.put<void>(`${this.userTutorialUrl}${userTutorialId}`, dto); 
   }
-  
+
+  //Gets the current tutorial's language
   getLanguage(languageID: string): Observable<Lenguaje> {
     return this.http.get<Lenguaje>(`${this.getLanguageUrl}${languageID}`);
     

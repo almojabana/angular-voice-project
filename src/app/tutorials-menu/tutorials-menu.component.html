@@ -1,3 +1,5 @@
+<!-- tutorials-menu-component.html: displays the list of tutorials for a chosen language -->
+<!-- skip link  -->
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -5,6 +7,8 @@
         </div> 
     </div>
 </div>
+
+<!-- navigation bar -->
 <div class="container-fluid">
     <nav class="navbar-nav navbar-expand-lg navbar-dark" style="background-color: #563d7c;">
         <div style="padding-left: 1em;">
@@ -23,13 +27,17 @@
     </nav>
 </div>
 
+<!-- displays the tutorials for the chosen language -->
 <main id="main-content2">
     <div class="container-fluid">
         <div class="row align-content-left">
             <div class="col-12">
+                 <!-- Does property binding
+                    if the language property exists in the Tutorials Menu component. -->
                 <h1 *ngIf="language">{{language.name}} Tutorials</h1>
                 <ol>
                     <li *ngFor="let tutorial of tutorials">
+                        <!-- displays the list of tutorials available for the language -->
                     <a routerLink="/tutorial-questions/{{tutorial.tutorialId}}">{{tutorial.titulo}}</a>
                     </li>
                 </ol>     

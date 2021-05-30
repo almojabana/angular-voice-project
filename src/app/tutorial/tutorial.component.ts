@@ -1,3 +1,6 @@
+/**Tutorial Class--The tutorial component manages the tutorial's dynamic
+ */
+
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SpeechRecognitionService } from '../shared/services/web-apis/speech-recognition.service';
 import { TutorialService } from '../shared/services/tutorial.service';
@@ -14,8 +17,7 @@ import { VoiceNavigationService } from '../shared/services/voice-navigation.serv
 import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Lenguaje} from '../shared/models/language';
-/**Tutorial Component--The tutorial component manages the tutorial's dynamic
- */
+
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
@@ -175,11 +177,9 @@ export class TutorialComponent implements OnInit {
    * This function is activated when the user submits an answer. 
    * The answer is sent to an endpoint for grading.
    * Current points are updated. 
-   * @param userAnswer 
    */
   gradeAnswer(userAnswer: string) {
     // The answer, current question id, and user tutorial id are used to create a DTO
-    debugger;
     var dto: PostRespuestaUsuarioDTO = {
       respuesta: userAnswer.replace(/\s+/g, '').trim(),
       preguntaId: this.currQuestion.preguntaId,
@@ -222,8 +222,6 @@ export class TutorialComponent implements OnInit {
 
   /**
    * Updates userTutorial Entity
-   * @param userTutorialId 
-   * @param userTutorial 
    */
   endTutorial(userTutorialId: number, userTutorial: TutorialUsuarioDTO) {
     this.isFinished = true;
